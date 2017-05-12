@@ -2,7 +2,7 @@
 
 # KumLadi -- Software Engineering Finals 2017
 
-### Group Members:
+### __Group Members__:
 ### Melvin Zitha
 
 ### Nathan Ngobale
