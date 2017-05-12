@@ -2,7 +2,7 @@
 
 # KumLadi -- Software Engineering Finals 2017
 
-### Group Member:
+## Group Members:
 ---
 ### Melvin Zitha
 
