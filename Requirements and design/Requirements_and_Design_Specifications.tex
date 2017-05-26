@@ -58,7 +58,7 @@ Melvin Zitha - u12138747\\
 \paragraph{}
 
 \subsection{Project Scope}
-\paragraph{}
+\paragraph{On a high-level view, the system must be an Online Transcation Processing system. This system will be most beneficial because it will allow the users to receive near instant responses to their requests. It can accommodate multiple concurrent users at the same time. The system will be able to handle all kinds of processes (mainly, but not limited to, the CRUD operations).}
 
 \subsection{Design Requirement}
 \paragraph{}
@@ -67,38 +67,40 @@ Melvin Zitha - u12138747\\
 \paragraph{}
 
 \section{Modules}
-\paragraph{}
-
-\subsection{Scope}
-\paragraph{}
-
-\subsection{Domain Model}
-\paragraph{}
-
-\subsection{Service Contracts}
-\paragraph{}
-	 	 
-\subsection{Technologies}
-\paragraph{}
-\section{Notifications}
+\subsection{Notifications}
 \paragraph{This module will be responsible for the delivering and receiving of notifications of the system. All notification messages will need to pass through this module in order for the necessary operations to take place.}
-\subsection{Use Cases}
+\subsubsection{Service Contracts}
+\paragraph{The notification requests will need to be of a specific type and properly validated before being processed. The request will fail if does not meet its specified prerequisites. In order for a notification request to be passed on to the server, the user needs to already exist on the database. if this requirement is not met, a notification request will fail.}
 \begin{itemize}
 \item Notify user after posting
 \item Notify user of a posting
 \item Remove posted notification 
 \item Read posted notification
 \end{itemize}
-\subsection{Requirements}
-\subsubsection{Functional}
+\subsubsection{Requirements}
+\subsubsection*{Functional}
 \begin{itemize}
 \item Showing appropriate messages according to the user
 \item User friendly and accurate
 \end{itemize}
-\subsubsection{Non-functional}
+\subsubsection*{Non-functional}
 \begin{itemize}
 \item User friendly and accurate
 \item The notification should be able to direct the user to the appropriate thread or posted
 \item Allow for an expansion of a post or thread 
+\end{itemize}
+\subsubsection{Sequence Diagram}
+\begin{figure}[h]
+\includegraphics[scale=1]{Diagrams/seq_dia.png}
+\caption{Sequence Diagram for the Notifications module.}
+\label{seq_dia}
+\end{figure}
+\paragraph{The sequence diagram ( Figure~\ref{seq_dia}) shows the manner in which all interactions between the user's preferred device and the server will occur. The user's device will request notifications from the server and the server will provide the notifications, if any.}
+
+\subsubsection{Technologies}
+\begin{itemize}
+\item Apache Kafka will be used for data streaming of the notifications. This will allow the user's page to be updated as the information changes in the background, without the user having to refresh their page to check if any changes have been made.
+\item The linking of the notification with the thread or post it is associated with will be done using JavaScript.This will allow for dynamic posting of notifications, without the adminstrator having to manually create every notification.
+\item Google Email is an API with a capacity to service a number of email within a limit. The API will be ideal to provide messaging capacity for the system without having to implement email servers internally.
 \end{itemize}
 \end{document}
