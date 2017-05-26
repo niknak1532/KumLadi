@@ -82,7 +82,7 @@ Melvin Zitha - u12138747\\
 \paragraph{}
 \section{Notifications}
 \paragraph{This module will be responsible for the delivering and receiving of notifications of the system. All notification messages will need to pass through this module in order for the necessary operations to take place.}
-\subsection{Use Cases}
+\subsection{Service Contracts}
 \begin{itemize}
 \item Notify user after posting
 \item Notify user of a posting
@@ -100,5 +100,11 @@ Melvin Zitha - u12138747\\
 \item User friendly and accurate
 \item The notification should be able to direct the user to the appropriate thread or posted
 \item Allow for an expansion of a post or thread 
+\end{itemize}
+\subsection{Technologies}
+\begin{itemize}
+\item Apache Kafka will be used for data streaming of the notifications. This will allow the user's page to be updated as the information changes in the background, without the user having to refresh their page to check if any changes have been made.
+\item The linking of the notification with the thread or post it is associated with will be done using JavaScript.This will allow for dynamic posting of notifications, without the adminstrator having to manually create every notification.
+\item Google Email is an API with a capacity to service a number of email within a limit. The API will be ideal to provide messaging capacity for the system without having to implement email servers internally.
 \end{itemize}
 \end{document}
