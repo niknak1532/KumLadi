@@ -1,0 +1,14 @@
+Requires: node.js
+	  monogoDB
+	  express.js
+	 
+
+To start the project:
+1. Open you terminal
+2. In the folder with the project, type: "npm install" (requires internet access)
+3. Open another terminal window and type: "mongod" (starts mongodb)
+4. Back in the first terminal, type: "npm start" (starts the project)
+
+To test, I used Postman (an API testing suite). Its free to download (See included screenshots for testing in postman) 
+
+
