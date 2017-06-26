@@ -6,8 +6,10 @@ debug('Creating users router');
 var router = express.Router();
 
 debug('Adding user route: GET / (Description: where users are retrieved)');
-router.get('/', users.get); // => GET to / lists all locations
+router.get('/', users.get); // => GET to / lists all students
 
-/*--Still need to edit for CRUD operations--*/
-debug('Locations router exported');
+debug('Adding users route: GET /getBySN/:student_number (Description: where users with specified student number is retrieved)');
+router.get('/getBySN/:student_number', users.getBySN) //=> to getBySN/student list all details of student with specified student_number
+
+debug('Users router exported');
 module.exports = router;
