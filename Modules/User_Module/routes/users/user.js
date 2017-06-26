@@ -6,9 +6,9 @@ debug('Creating user router');
 var router = express.Router();
 
 debug('Adding user route: PUSH / (Description: where user is created)');
-router.post('/', user.create); // => PUSH to /create creates a new location.
+router.post('/', user.create); // => PUSH to /create creates a new user.
 
 /*--Still need to edit for CRUD operations--*/
 
-debug('Location router exported');
+debug('User router exported');
 module.exports = router;
