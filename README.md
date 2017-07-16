@@ -1,6 +1,10 @@
 ![UP Logo](http://i.imgur.com/QAIRtGX.png)
 
-# Buzz | Software Engineering Project 2017
+# Software Engineering Project
+
+**Group name**: *KumLadi*<br>
+**Project name**: *Buzz*<br>
+**Module code**: *COS 301 (2017)*
 
 ## Contributors:
 
