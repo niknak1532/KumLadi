@@ -13,4 +13,4 @@
 #### Kamogelo Tsipa - <a href= "https://github.com/KamoKG" target="_blank">**GitHub**</a><a href="" > **LinkedIn**</a>
 ---
 
-*Buzz* is an online educational forum that aims to encourage user participation and collaboration by using features of Gamification, in effort to engage users and make the user experience non-formal yet conducive. 
+*Buzz* is an online educational forum that aims to encourage user participation and collaboration by using features of [Gamification](https://en.wikipedia.org/wiki/Gamification), in effort to engage users and make the user experience non-formal yet conducive. 
