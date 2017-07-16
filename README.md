@@ -1,15 +1,16 @@
-![UP Logo](https://raw.githubusercontent.com/KobusMarais/cos301_Longsword_Navigation/master/UP_Logo.PNG)
+![UP Logo](http://i.imgur.com/QAIRtGX.png)
 
-# KumLadi -- Software Engineering Finals 2017
+# Buzz | Software Engineering Project 2017
 
-## Group Members:
+## Contributors:
 
-### Melvin Zitha
+#### Nathan Ngobale - <a href= "https://github.com/JON-Nathan" target="_blank">**GitHub**</a><a href="" > **LinkedIn**</a>
 
-### Nathan Ngobale
+#### Nkosinathi Mothoa - <a href= "https://github.com/Nathi360" target="_blank">**GitHub**</a><a href="https://linkedin.com/in/nmothoa" > **LinkedIn**</a>
 
-### Nkosinathi Mothoa
+#### Nkosenhle Ncube - <a href= "https://github.com/niknak1532" target="_blank">**GitHub**</a><a href="https://www.linkedin.com/in/nkosenhlencube" > **LinkedIn**</a>
 
-### Nkosenhle Ncube
+#### Kamogelo Tsipa - <a href= "https://github.com/KamoKG" target="_blank">**GitHub**</a><a href="" > **LinkedIn**</a>
+---
 
-### Kamogelo Tsipa
+*Buzz* is an online educational forum that aims to encourage user participation and collaboration by using features of Gamification, in effort to engage users and make the user experience non-formal yet conducive. 
