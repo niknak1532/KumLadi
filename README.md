@@ -1,3 +1,4 @@
+![UP Logo](http://i.imgur.com/nHojHc3.jpg)
 ![UP Logo](http://i.imgur.com/QAIRtGX.png)
 
 # Software Engineering Project
