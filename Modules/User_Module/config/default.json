@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "mongodb": {
+      "host": "localhost",
+      "database": "user-db"
+    }
+  }
+}
