@@ -1,8 +1,0 @@
-{
-  "servers": {
-    "mongodb": {
-      "host": "localhost",
-      "database": "gamify-db"
-    }
-  }
-}
