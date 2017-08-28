@@ -4,15 +4,15 @@
 //~ describe('User create function: ', function() {
 	 //~ it('Should add new users: ', function(done) {
 	 	 //~ var userData = {
-			 //~ "userID" : "A101",
-			 //~ "title" : "Ms", 
-			 //~ "initials" : "HR",
-			 //~ "name" : "Her",
+			 //~ "userID" : "A102",
+			 //~ "title" : "Mr", 
+			 //~ "initials" : "MN",
+			 //~ "name" : "Min",
 	 	 	 //~ "surname" : "Ion", 
-	 	 	 //~ "email" : "herion@gmail.com", 
+	 	 	 //~ "email" : "minion@gmail.com", 
 	 	 	 //~ "cell" : "1234567800", 
 	 	 	 //~ "modules" : "'216'", 
-			 //~ "pseodoname" : "rion"
+			 //~ "pseodoname" : "mini"
 	 	 //~ };
 
 	 	 //~ needle.post('localhost:3010/createUser', userData, function(err, res) {

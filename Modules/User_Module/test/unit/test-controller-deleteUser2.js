@@ -4,8 +4,8 @@
 //~ describe('User Delete function: ', function() {
 	//~ it('Should remove specified users: ', function(done) {
 	 	 //~ var userData = {
-	 	 	 //~ "userID" : "A101", 
-	 	 	 //~ "pseodoname" : "rion"
+	 	 	 //~ "userID" : "A102", 
+	 	 	 //~ "pseodoname" : "mini"
 	 	 //~ };
 
 	 	 //~ needle.delete('localhost:3010/deleteUser', userData, function(err, res) {
