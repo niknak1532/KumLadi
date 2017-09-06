@@ -1,0 +1,24 @@
+{
+  "name": "kumladi-api",
+  "version": "0.0.0",
+  "description": "Vote API for Buzz",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "mocha test/*/*"
+  },
+  "author": "Team KumLadi",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "config": "^1.25.1",
+    "cross-env": "^3.2.4",
+    "debug": "^2.6.3",
+    "express": "^4.15.4",
+    "lodash": "^4.17.4",
+    "mongo": "^0.1.0",
+    "mongoose": "^4.9.1",
+    "morgan": "^1.8.2",
+    "nodemon": "^1.11.0",
+    "parse-json": "^2.2.0"
+  }
+}
