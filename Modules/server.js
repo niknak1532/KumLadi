@@ -1068,4 +1068,427 @@ app.get('/getContent/:postID',function(req,res,next){
 		});
 	}
 });
+/**
+* @params req.body.postID The ID of the post.
+* @params req.body.student_number The ID of the user.
+* @todo This will add an up vote to the post being made.
+* @return A JSON object will be returned. It will contain a boolean field to indicate if the process succeed. A text field describing how the process went.
+*/
+app.post('/upVote',function(req,res,next){
+	if(req.body.postID && req.body.student_number)
+	{
+		Posts.findById(req.body.postID,function(err,post){
+			if(err)
+			{
+				console.log(err);
+				return res.status(200).json({
+					status:false,
+					text:err
+				});
+			}
+			if(!post)
+			{
+				console.log("Post cannot be found");
+				return res.status(200).json({
+					status:false,
+					text:"Post cannot be found"
+				});
+			}
+			Votes.find({postID:post._id},function(err,vote){
+				if(err)
+				{
+					console.log(err);
+					return res.status(200).json({
+						status:true,
+						text:err
+					});
+				}
+				if(!vote)
+				{
+					var v=new Votes({
+						postID:post._id,
+						upVotes:[],
+						downVotes:[]
+					});
+					v.save(function(err,vote){
+						if(err)
+						{
+							console.log(err);
+							return res.status(200).json({
+								status:false,
+								text:err
+							});
+						}
+						vote.upVotes.push(req.body.student_number);
+						vote.save(function(err,vote){
+							if(err)
+							{
+								console.log(err);
+								return res.status(200).json({
+									status:false,
+									text:err
+								});
+							}
+							console.log("Successfully up voted");
+							return res.status(200).json({
+								status:true,
+								text:"Successfully up voted"
+							});
+						});
+					});
+				}
+				else
+				{
+					var done=0;
+					_.forEach(vote.downVotes,function(vote){
+						if(vote==req.body.student_number)
+						{
+							return res.status(200).json({
+								status:false,
+								text:"User already down voted this post"
+							});
+						}
+					});
+					for(var i=0;i<vote.upVotes.length;i++)
+					{
+						if(vote.upVotes[i]==req.body.student_number)
+						{
+							done=1;
+							vote.upVotes.splice(i,1);
+							break;
+						}
+					}
+					if(done==0)
+					{
+						vote.upVotes.push(req.body.student_number);
+						vote.save(function(err,vote){
+							if(err)
+							{
+								console.log(err);
+								return res.status(200).json({
+									status:false,
+									text:err
+								});
+							}
+							return res.status(200).json({
+								status:true,
+								text:"Successfully up voted"
+							});
+						});
+					}
+					else
+					{
+						vote.save(function(err,vote){
+							if(err)
+							{
+								console.log(err);
+								return res.status(200).json({
+									status:false,
+									text:err
+								});
+							}
+							return res.status(200).json({
+								status:true,
+								text:"Successfully up voted"
+							});
+						});
+					}
+				}
+			});
+		});
+	}
+	else
+	{
+		return res.status(200).json({
+			status:true,
+			text:"Missing parameters"
+		});
+	}
+});
+
+/**
+* @params req.body.postID The ID of the post.
+* @params req.body.student_number The ID of the user.
+* @todo This will add an up vote to the post being made.
+* @return A JSON object will be returned. It will contain a boolean field to indicate if the process succeed. A text field describing how the process went.
+*/
+app.post('/downVote',function(req,res,next){
+	if(req.body.postID && req.body.student_number)
+	{
+		Posts.findById(req.body.postID,function(err,post){
+			if(err)
+			{
+				console.log(err);
+				return res.status(200).json({
+					status:false,
+					text:err
+				});
+			}
+			if(!post)
+			{
+				console.log("Post cannot be found");
+				return res.status(200).json({
+					status:false,
+					text:"Post cannot be found"
+				});
+			}
+			Votes.find({postID:post._id},function(err,vote){
+				if(err)
+				{
+					console.log(err);
+					return res.status(200).json({
+						status:true,
+						text:err
+					});
+				}
+				if(!vote)
+				{
+					var v=new Votes({
+						postID:post._id,
+						upVotes:[],
+						downVotes:[]
+					});
+					v.save(function(err,vote){
+						if(err)
+						{
+							console.log(err);
+							return res.status(200).json({
+								status:false,
+								text:err
+							});
+						}
+						vote.downVotes.push(req.body.student_number);
+						vote.save(function(err,vote){
+							if(err)
+							{
+								console.log(err);
+								return res.status(200).json({
+									status:false,
+									text:err
+								});
+							}
+							console.log("Successfully down voted");
+							return res.status(200).json({
+								status:true,
+								text:"Successfully down voted"
+							});
+						});
+					});
+				}
+				else
+				{
+					var done=0;
+					_.forEach(vote.upVotes,function(vote){
+						if(vote==req.body.student_number)
+						{
+							return res.status(200).json({
+								status:false,
+								text:"User already up voted this post"
+							});
+						}
+					});
+					for(var i=0;i<vote.downVotes.length;i++)
+					{
+						if(vote.downVotes[i]==req.body.student_number)
+						{
+							done=1;
+							vote.downVotes.splice(i,1);
+							break;
+						}
+					}
+					if(done==0)
+					{
+						vote.downVotes.push(req.body.student_number);
+						vote.save(function(err,vote){
+							if(err)
+							{
+								console.log(err);
+								return res.status(200).json({
+									status:false,
+									text:err
+								});
+							}
+							return res.status(200).json({
+								status:true,
+								text:"Successfully down voted"
+							});
+						});
+					}
+					else
+					{
+						vote.save(function(err,vote){
+							if(err)
+							{
+								console.log(err);
+								return res.status(200).json({
+									status:false,
+									text:err
+								});
+							}
+							return res.status(200).json({
+								status:true,
+								text:"Successfully down voted"
+							});
+						});
+					}
+				}
+			});
+		});
+	}
+	else
+	{
+		return res.status(200).json({
+			status:true,
+			text:"Missing parameters"
+		});
+	}
+});
+/**
+* @params None
+* @todo Will return all the votes. It is intended for testing purposes.
+* @return A JSON object will returned. It will contain an array fielded with all the vote objects. 
+*/
+app.get('/getAllVotes',function(req,res,next){
+	Votes.find({},function(err,votes){
+		if(err)
+		{
+			console.log(err);
+			return res.status(200).json({
+				arr:[]
+			});
+		}
+		return res.status(200).json({
+			arr:votes
+		});
+	});
+});
+
+/**
+* @params req.params.postID The ID of the post.
+* @todo The function will return the number of up votes of a particular post.
+* @return A JSON object will be returned. It will contain a boolean field to state if the process went well. There will also be a field with the number of up votes.
+*/
+app.get('/getUpVotes/:postID',function(req,res,next){
+	if(req.params.postID)
+	{
+		Posts.findById(req.params.postID,function(err,post){
+			if(err)
+			{
+				console.log(err);
+				return res.status(200).json({
+					status:false,
+					text:err,
+					num:-1
+				});
+			}
+			if(!post)
+			{
+				console.log("There is no post with this ID");
+				return res.status(200).json({
+					status:false,
+					num:-1,
+					text:"There is no post with this ID"
+				});
+			}
+			Votes.find({postID:post._id},function(err,vote){
+				if(err)
+				{
+					console.log(err);
+					return res.status(200).json({
+						status:false,
+						num:-1,
+						text:err
+					});
+				}
+				if(!vote)
+				{
+					console.log("There is no vote for this post");
+					return res.status(200).json({
+						status:true,
+						num:0,
+						text:"There is no vote for this post"
+					});
+				}
+				return res.status(200).json({
+					status:true,
+					num:vote.upVotes.length,
+					text:"Successfully found votes"
+				});
+			});
+		});
+	}
+	else
+	{
+		return res.status(200).json({
+			status:false,
+			num:-1,
+			text:"Missing parameters"
+		});
+	}
+});
+
+/**
+* @params req.params.postID The ID of the post.
+* @todo The function will return the number of down votes of a particular post.
+* @return A JSON object will be returned. It will contain a boolean field to state if the process went well. There will also be a field with the number of up votes.
+*/
+app.get('/getDownVotes/:postID',function(req,res,next){
+	if(req.params.postID)
+	{
+		Posts.findById(req.params.postID,function(err,post){
+			if(err)
+			{
+				console.log(err);
+				return res.status(200).json({
+					status:false,
+					text:err,
+					num:-1
+				});
+			}
+			if(!post)
+			{
+				console.log("There is no post with this ID");
+				return res.status(200).json({
+					status:false,
+					num:-1,
+					text:"There is no post with this ID"
+				});
+			}
+			Votes.find({postID:post._id},function(err,vote){
+				if(err)
+				{
+					console.log(err);
+					return res.status(200).json({
+						status:false,
+						num:-1,
+						text:err
+					});
+				}
+				if(!vote)
+				{
+					console.log("There is no vote for this post");
+					return res.status(200).json({
+						status:true,
+						num:0,
+						text:"There is no vote for this post"
+					});
+				}
+				return res.status(200).json({
+					status:true,
+					num:vote.downVotes.length,
+					text:"Successfully found votes"
+				});
+			});
+		});
+	}
+	else
+	{
+		return res.status(200).json({
+			status:false,
+			num:-1,
+			text:"Missing parameters"
+		});
+	}
+});
+
 app.listen(3000, ()=> console.log("Server running at 3000"))
