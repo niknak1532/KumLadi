@@ -136,6 +136,7 @@ var csStatusSchema = new mongoose.Schema ({
 	}
 });
 var csStatus = connectionToUser.model('csStatus', csStatusSchema);
+var csStatusS=csStatus;
 var Users=connectionToUser.model('User', UserSchema);
 var Votes=connectionToPost.model('votemodule',VoteSchema);
 var Posts = connectionToPost.model('postModule', Post_module);
@@ -1563,5 +1564,260 @@ app.get('/getDownVotes/:postID',function(req,res,next){
 		});
 	}
 });
+
+/**
+* @params req.params.studentID This will hold the user's student number.
+* @params req.params.course_code This will hold the user's course code.
+* @todo The function will check if the user belongs to the particular course module.
+* @return A JSON object is returned. The object will contain a boolean variable which will be true if nothing goes wrong in the function. A data field will either be null or have the user's status symbol. A text field will hold information about what happened in the function.
+*/
+app.get('/getStatus/:studentID/:course_code',function(req,res,next){
+	if(req.params.studentID&&req.params.course_code)
+	{
+		csStatus.find({student_number:req.params.studentID,course_code:req.params.course_code},function(err,obj){
+			if(err)
+			{
+				debug("Encountered error: "+err);
+				res.status(200).json({
+					"status":false,
+					"text":err,
+					"data":null
+				});
+			}
+			else if(obj)
+			{
+				debug("found the cs status");
+				res.status(200).json({
+					"status":true,
+					"text":"found the cs status",
+					"data":obj.status_symbol
+				});
+			}
+			else
+			{
+				debug("did not find the user");
+				res.status(200).json({
+					"status":true,
+					"text":"did not find the user",
+					"data":null
+				});
+			}
+		});
+	}
+	else
+	{
+		debug("Missing parameters");
+		res.status(200).json({
+			"status":false,
+			"text":"Missing parameters",
+			"data":null
+		});
+	}
+});
+
+/**
+* @params req.params.studentID This will hold the student number.
+* @todo The function will search for the user's information. All of the user's course module and the status for the module will be collected as well.
+* @return A JSON object will be returned. A boolean field will state if the function went well. A text field will give information about what happens in the function. A data field will contain an array of objects.
+*/
+app.get('/getUserInfo/:studentID',function(req,res,next){
+	if(req.params.studentID)
+	{
+		csStatusS.find({student_number:req.params.studentID},function(err,obj){
+			var docs=[];
+			if(err)
+			{
+				debug("Encountered error: "+err);
+				res.status(200).json({
+					"status":false,
+					"text":err,
+					"data":[]
+				});
+			}
+			else if(obj)
+			{
+				_.forEach(obj,function(doc){
+					docs.push({
+						"course_code":doc.course_code,
+						"symbol":doc.status_symbol
+					});
+				});
+				if(docs.length==0)
+				{
+					debug("no users found");
+					res.status(200).json({
+						"status":true,
+						"text":"no users found",
+						"data":[]
+					});
+				}
+				else
+				{
+					debug("users found");
+					res.status(200).json({
+						"status":true,
+						"text":"users found",
+						"data":docs
+					});
+				}
+			}
+			else
+			{
+				debug("no user objects found");
+				res.status(200).json({
+					"status":false,
+					"text":"no user objects found",
+					"data":[]
+				});
+			}
+		});
+	}
+	else
+	{
+		debug("missing parameters");
+		res.status(200).json({
+			"status":false,
+			"text":"missing parameters",
+			"data":[]
+		});
+	}
+});
+
+/**
+* @params req.params.course This will hold the course module.
+* @todo The function will search for the course's information. All of the course module's users and the status of the user will be collected.
+* @return A JSON object will be returned. A boolean field will state if the function went well. A text field will give information about what happens in the function. A data field will contain an array of objects.
+*/
+app.get('/getCourseInfo/:course',function(req,res,next){
+	if(req.params.course)
+	{
+		csStatusS.find({course_code:req.params.course},function(err,obj){
+			var docs=[];
+			if(err)
+			{
+				debug("Encountered error: "+err);
+				res.status(200).json({
+					"status":false,
+					"text":err,
+					"data":[]
+				});
+			}
+			else if(obj)
+			{
+				_.forEach(obj,function(doc){
+					docs.push({
+						"studentID":doc.student_number,
+						"symbol":doc.status_symbol
+					});
+				});
+				if(doc.length==0)
+				{
+					debug("found no course module");
+					res.status(200).json({
+						"status":true,
+						"data":[],
+						"text":"found no course module"
+					});
+				}
+				else
+				{
+					debug("found course module");
+					res.status(200).json({
+						"status":true,
+						"data":docs,
+						"text":"found course module"
+					});
+				}
+			}
+			else
+			{
+				debug("The course module was not found");
+				res.status(200).json({
+					"status":false,
+					"data":[],
+					"text":"The course module was not found"
+				});
+			}
+		});
+	}
+	else
+	{
+		debug("Missing parameters");
+		res.status(200).json({
+			"status":false,
+			"data":[],
+			"text":"missing parameters"
+		});
+	}
+});
+
+/**
+* @params req.params.status This will hold the status symbol.
+* @todo The function will search for the status symbol's information. All of the status symbol's users and the course module of the status symbol will be collected.
+* @return A JSON object will be returned. A boolean field will state if the function went well. A text field will give information about what happens in the function. A data field will contain an array of objects.
+*/
+app.get('/getStatusInfo/:status',function(req,res,next){
+	if(req.params.status)
+	{
+		csStatusS.find({status_symbol:req.params.status},function(err,obj){
+			var docs=[];
+			if(err)
+			{
+				debug("Encountered error: "+err);
+				res.status(200).json({
+					"status":false,
+					"text":err,
+					"data":[]
+				});
+			}
+			else if(obj)
+			{
+				_.forEach(obj,function(doc){
+					docs.push({
+						"studentID":doc.student_number,
+						"course":doc.course_code
+					});
+				});
+				if(doc.length==0)
+				{
+					debug("found no status");
+					res.status(200).json({
+						"status":true,
+						"data":[],
+						"text":"found no status"
+					});
+				}
+				else
+				{
+					debug("found no status");
+					res.status(200).json({
+						"status":true,
+						"data":docs,
+						"text":"found status"
+					});
+				}
+			}
+			else
+			{
+				debug("found no status");
+				res.status(200).json({
+					"status":false,
+					"data":[],
+					"text":"found no status"
+				});
+			}
+		});
+	}
+	else
+	{
+		debug("missing parameters");
+		res.status(200).json({
+			"status":false,
+			"text":"missing parameters",
+			"data":[]
+		});
+	}
+});
+
 
 app.listen(3000, ()=> console.log("Server running at 3000"))
