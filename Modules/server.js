@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'); 
 //var console.log       = require('console.log')('kumLadi-api:controllers:post');
- 
+
 mongoose.Promise = global.Promise;
 var connectionToPost=createConnection('mongod://KamoKG:buzzTest1234@ds119044.mlab.com:19044/post-db');
 var connectionToUser=createConnection('mongodb://nathi:2580456Nn@ds161483.mlab.com:61483/kumladi-users-db');
@@ -1564,7 +1564,7 @@ app.get('/getDownVotes/:postID',function(req,res,next){
 		});
 	}
 });
-
+var debug   = require('debug')('kumladi-api:controllers:csStatus');
 /**
 * @params req.params.studentID This will hold the user's student number.
 * @params req.params.course_code This will hold the user's course code.
