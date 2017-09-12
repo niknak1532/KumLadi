@@ -752,7 +752,80 @@ app.get('/getPosts/:course_code',function(req,res,next){
 		});
 	}
 }); // scrap it
-
+/**
+* @params req.params.postID The post's ID
+* @todo This function will fetch all the siblings of the post in question.
+* @return A JSON object will be returned. If successful then every index of the array will contain a JSON object. A boolean field will be there to indicate if the process was successful. 
+*/
+app.get('/getSiblings/:postID',function(req,res,next){
+	if(req.params.postID)
+	{
+		Posts.findById(req.params.postID,function(err,child){
+			if(err)
+			{
+				console.log(err);
+				return res.status(200).json({
+					status:false,
+					text:err,
+					data:[]
+				});
+			}
+			if(!child)
+			{
+				console.log("Couldn't find the post");
+				return res.status(200).json({
+					status:false,
+					text:"Couldn't find the post",
+					data:[]
+				});
+			}
+			if(child.parent_ID==null)
+			{
+				console.log("Post does not have a parent");
+				return res.status(200).json({
+					status:false,
+					text:"Post does not have a parent",
+					data:[]
+				});
+			}
+			Posts.findById(child.parent_ID,function(err,par){
+				if(err)
+				{
+					console.log(err);
+					return res.status(200).json({
+						status:false,
+						text:err,
+						data:[]
+					});
+				}
+				if(!par)
+				{
+					console.log("Cannot find parent post");
+					return res.status(200).json({
+						status:false,
+						text:"Cannot find parent post",
+						data:[]
+					});
+				}
+				console.log("Found siblings");
+				return res.status(200).json({
+					status:true,
+					text:"Found siblings",
+					data:par.child_list
+				});
+			});
+		});
+	}
+	else
+	{
+		console.log("Missing parameters");
+		return res.status(200).json({
+			status:false,
+			text:"Missing parameters",
+			data:[]
+		});
+	}
+});
 app.patch('/movePost/:postID/:parentID',function(req,res,next){
 	if(req.params.parentID&&req.params.postID)
 	{
