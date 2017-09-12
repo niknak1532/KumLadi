@@ -1574,7 +1574,7 @@ var debug   = require('debug')('kumladi-api:controllers:csStatus');
 app.get('/getStatus/:studentID/:course_code',function(req,res,next){
 	if(req.params.studentID&&req.params.course_code)
 	{
-		csStatus.find({student_number:req.params.studentID,course_code:req.params.course_code},function(err,obj){
+		csStatus.find({userID:req.params.studentID,courseCode:req.params.course_code},function(err,obj){
 			if(err)
 			{
 				debug("Encountered error: "+err);
@@ -1590,7 +1590,7 @@ app.get('/getStatus/:studentID/:course_code',function(req,res,next){
 				res.status(200).json({
 					"status":true,
 					"text":"found the cs status",
-					"data":obj.status_symbol
+					"data":obj.status
 				});
 			}
 			else
@@ -1623,7 +1623,7 @@ app.get('/getStatus/:studentID/:course_code',function(req,res,next){
 app.get('/getUserInfo/:studentID',function(req,res,next){
 	if(req.params.studentID)
 	{
-		csStatusS.find({student_number:req.params.studentID},function(err,obj){
+		csStatusS.find({userID:req.params.studentID},function(err,obj){
 			var docs=[];
 			if(err)
 			{
@@ -1638,8 +1638,8 @@ app.get('/getUserInfo/:studentID',function(req,res,next){
 			{
 				_.forEach(obj,function(doc){
 					docs.push({
-						"course_code":doc.course_code,
-						"symbol":doc.status_symbol
+						"course_code":doc.courseCode,
+						"symbol":doc.status
 					});
 				});
 				if(docs.length==0)
@@ -1691,7 +1691,7 @@ app.get('/getUserInfo/:studentID',function(req,res,next){
 app.get('/getCourseInfo/:course',function(req,res,next){
 	if(req.params.course)
 	{
-		csStatusS.find({course_code:req.params.course},function(err,obj){
+		csStatusS.find({courseCode:req.params.course},function(err,obj){
 			var docs=[];
 			if(err)
 			{
@@ -1706,8 +1706,8 @@ app.get('/getCourseInfo/:course',function(req,res,next){
 			{
 				_.forEach(obj,function(doc){
 					docs.push({
-						"studentID":doc.student_number,
-						"symbol":doc.status_symbol
+						"studentID":doc.userID,
+						"symbol":doc.status
 					});
 				});
 				if(doc.length==0)
@@ -1774,8 +1774,8 @@ app.get('/getStatusInfo/:status',function(req,res,next){
 			{
 				_.forEach(obj,function(doc){
 					docs.push({
-						"studentID":doc.student_number,
-						"course":doc.course_code
+						"studentID":doc.userID,
+						"course":doc.courseCode
 					});
 				});
 				if(doc.length==0)
