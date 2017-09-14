@@ -2,13 +2,12 @@ var mongoose = require('mongoose');
 //var console.log       = require('console.log')('kumLadi-api:controllers:post');
 
 mongoose.Promise = global.Promise;
-var connectionToPost=mongoose.createConnection('mongodb://KamoKG:buzzTestPost1234@ds119044.mlab.com:19044/post-db');
+/*var connectionToPost=mongoose.createConnection('mongodb://KamoKG:buzzTestPost1234@ds119044.mlab.com:19044/post-db');
 var connectionToUser=mongoose.createConnection('mongodb://nathi:2580456Nn@ds161483.mlab.com:61483/kumladi-users-db');
-
-
-/*var connectionToPost = mongoose.createConnection('mongodb://localhost/post-db');
-var connectionToUser = mongoose.createConnection('mongodb://localhost/user-db');
 */
+
+var connectionToPost = mongoose.createConnection('mongodb://localhost/post-db')
+var connectionToUser = mongoose.createConnection('mongodb://localhost/user-db');
 
 console.log('Initialising model: post');
 var Post_module = new mongoose.Schema({
@@ -126,7 +125,7 @@ var csStatusSchema = new mongoose.Schema ({
 	}
 });
 
-var csStatus = connectionToUser.model('csStatus', csStatusSchema);
+var csStatus = connectionToPost.model('csStatus', csStatusSchema);
 var csStatusS=csStatus;
 var Users=connectionToUser.model('User', UserSchema);
 var Votes=connectionToPost.model('votemodule',VoteSchema);
@@ -139,12 +138,23 @@ var io = require('socket.io')(server);
 var _ =require("lodash");
 var path = require('path');
 
+var cors = require('cors');
+
+/*Added*/
+
+var net = require('net');
+var JsonSocket = require('json-socket');
+//Server B port number
+var sBPort = process.env.PORT || 9838;
+
+const port = process.env.PORT || 3000;
+
 app.use(express.static(path.join(__dirname + '/public/dist'))); // I am not to sure about this line
 
-let bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
-
+app.use(cors());
 
 /**
 * @params req.params.course_code The course code.
@@ -942,6 +952,91 @@ var moveDFS=function(obj,level){
 	}
 };
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+					/*Users*/
+/**
+* @body Takes in userID and password
+* @todo Query user on LDAP - and add user to db if user doesn't exist
+* @return A JSON object will be returned. If successful then the object will contain an array of JSON objects, otherwise there will be an error message.
+*/ 
+app.post('/userLogin', function(req, res, next) {
+	console.log('/userLogin');
+	
+	var loginDetails = {
+		userID: req.body.userID,
+		password: req.body.password
+	};
+	
+	var host = '127.0.0.1'; 
+	var socket = new JsonSocket(new net.Socket());
+	socket.connect(sBPort, host);
+	socket.on('connect', function() {
+		socket.sendMessage(loginDetails);
+		socket.on('message', function(message) {
+			var retObject = JSON.parse(message.result);
+			var userDetails = {
+				pseodoname: retObject.pseodoname,
+				userID: retObject.userID,
+				title: retObject.title, 
+				initials: retObject.initials,
+				name: retObject.name,
+				surname: retObject.surname,
+				email: retObject.email,
+				cell: retObject.cell, 
+				modules: retObject.modules
+			};
+			console.log(userDetails);
+			
+			//Query local DB to check if user exists
+			var user = userDetails.userID;
+			console.log(user);
+			
+			Users.findOne({'userID': user}, function(err, doc) {
+				if(err) {
+					return res.status(404).json('An error has occured'); 
+				}
+				
+				else if(!doc) { //User doesn't exist - Add user
+					console.log('User not in db - Adding new user');
+				
+					var newUser = new Users({
+						pseodoname: userDetails.pseodoname,
+						userID: userDetails.userID,
+						title: userDetails.title, 
+						initials: userDetails.initials,
+						name: userDetails.name,
+						surname: userDetails.surname,
+						email: userDetails.email,
+						cell: userDetails.cell, 
+						modules: userDetails.modules
+					});
+					
+					newUser.save(function(err, users) {
+						if(err) {
+							return res.status(404).json('An error has occured');
+						}
+						
+						else if(!users) {
+							console.log('User not added');
+							return res.status(404).json('User not added');
+						}
+						
+						else { //New user saved to db
+							console.log(users);
+							return res.status(200).json(users);
+						}
+					});
+				}
+				
+				else { //User already exists in our db
+					console.log('User already exists');
+					return res.status(200).json(doc);
+				}
+			});
+		});
+	});
+});
+
 app.get('/display', function(req, res, next) {
 	console.log('/display get');
 	Users.find(function(err, users) {
@@ -953,23 +1048,24 @@ app.get('/display', function(req, res, next) {
 });
 
 
-//Create user
-app.post('/createUser', function(req, res, next) {
-	console.log('/createUser');
-	var user = new Users(req.body);
-	user.save(function(err, users) {
-		console.log(users);
-		if(err) return next(err);
-		res.json(users).status(201);
-	});
-});
+//Create user - Removed See => /userLogin
+//~ app.post('/createUser', function(req, res, next) {
+	//~ console.log('/createUser');
+	
+	//~ var user = new Users(req.body);
+	//~ user.save(function(err, users) {
+		//~ console.log(users);
+		//~ if(err) return next(err);
+		//~ res.json(users).status(201);
+	//~ });
+//~ });
 
 //Get user
 app.get('/getUser/:userID', function(req, res, next) {
 	console.log('/getUser/userID get');
 	var user = req.params.userID;
 	console.log('UserID = ' + user);
-	Users.find({$or: [{'userID': user}, {'pseodoname': user}]}, function(err, doc) {
+	Users.findOne({$or: [{'userID': user}, {'pseodoname': user}]}, function(err, doc) {
 		if(err) {
 			return next(err);
 		}
@@ -1811,4 +1907,4 @@ app.get('/getStatusInfo/:status',function(req,res,next){
 });
 
 
-app.listen(3000, ()=> console.log("Server running at 3000"))
+app.listen(port, ()=> console.log("Server running at " + port));
