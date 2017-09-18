@@ -1255,7 +1255,7 @@ app.post('/upVote',function(req,res,next){
 					text:"Post cannot be found"
 				});
 			}
-			Votes.find({postID:post._id},function(err,vote){
+			Votes.findOne({postID:post._id},function(err,vote){
 				if(err)
 				{
 					console.log(err);
@@ -1393,7 +1393,7 @@ app.post('/downVote',function(req,res,next){
 					text:"Post cannot be found"
 				});
 			}
-			Votes.find({postID:post._id},function(err,vote){
+			Votes.findOne({postID:post._id},function(err,vote){
 				if(err)
 				{
 					console.log(err);
@@ -1551,7 +1551,7 @@ app.get('/getUpVotes/:postID',function(req,res,next){
 					text:"There is no post with this ID"
 				});
 			}
-			Votes.find({postID:post._id},function(err,vote){
+			Votes.findOne({postID:post._id},function(err,vote){
 				if(err)
 				{
 					console.log(err);
@@ -1615,7 +1615,7 @@ app.get('/getDownVotes/:postID',function(req,res,next){
 					text:"There is no post with this ID"
 				});
 			}
-			Votes.find({postID:post._id},function(err,vote){
+			Votes.findOne({postID:post._id},function(err,vote){
 				if(err)
 				{
 					console.log(err);
