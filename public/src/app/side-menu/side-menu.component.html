@@ -1,0 +1,97 @@
+<div class="panel panel-default" id="side">
+  <div class="panel-heading" style="background: #333; color: white ">
+    <div class="dropdown" style="float: right; display:none">
+      <button class="btn btn-default dropdown-toggle" style="float: right; margin-bottom: 10px" type="button" data-toggle="dropdown">{{sm_moduleName}}
+        <span class="caret"></span></button>
+      <ul class="dropdown-menu">
+        <li class="dropdown-header">Your Modules</li>
+        <li><a href="#">{{sm_moduleName}}</a></li>
+      </ul>
+    </div>
+    <h3 class="panel-title">Menu</h3>
+  </div>
+  <div class="panel-body" style="font-size: 12px; width:260px; height:90%; overflow-y:scroll; color: #333">
+    <div id="div_newThread" style="display: none">
+      Module: <input type="text" value="{{sm_moduleName}}" disabled>
+      P_ID: <input type="text" value="{{sm_parentID}}" disabled><br>
+      Heading :<input type="text" placeholder="heading" [(ngModel)]="sm_heading">
+      Content :<input type="text" placeholder="content" [(ngModel)]="sm_content">
+      <br>
+      <p>{{sm_heading}}</p>
+      <br>
+      <p>{{sm_content}}</p>
+      <br>
+      <button (click)="sm_createThread()" onclick="document.getElementById('div_newThread').style.display = 'none' "> Create Thread</button>
+
+    </div>
+
+
+      <div  *ngFor="let p1 of sm_Posts" style="padding-left: +0px"  >
+          <div >
+            <button onclick="$(this).parent().children().toggle(); $(this).show()" type="button" class="btn btn-default" style=" margin-top: 15px; width: 90%" (click)=" selectedItem(p1.postID,p1.heading)">{{p1.heading}}</button>
+
+          <!--<button nglButton="neutral"  onclick="document.getElementById('div_newThread').style.display = 'inline' " style="display: none" (click)="sm_moduleName = p1.course_code; sm_parentID = p1._id">Create New Thread</button>-->
+          </div>
+      </div>
+    <!--</div>-->
+    <div>
+      <!--<md-button class="md-raised md-primary">Primary</md-button>-->
+      <!--<mui-button>CLick Me</mui-button>-->
+      <!--<button >Add a new module</button>-->
+      <br>
+      <hr>
+      <button type="button" class="btn btn-success" onclick="document.getElementById('txt2').style.display = 'none'; document.getElementById('div_main').style.display = 'inline'; document.getElementById('txt1').style.display = 'inline';">Create Thread</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .divNaviItem:hover{
+    color: blue;
+    cursor: pointer;
+  }
+
+  #divNavi{
+    /*background-color: #bbb;*/
+    font-size: 14px;
+  }
+
+  .badge {
+    font-size: 8px;
+    background-color: black;
+  }
+
+  .divModule{
+    background-color: #999;
+    color: #EEE;
+    font-size: 20px;
+    padding-left: 10px;
+  }
+
+  .folder{
+    color: sandybrown;
+  }
+
+  .buttondemoBasicUsage section {
+    background: #f7f7f7;
+    border-radius: 3px;
+    text-align: center;
+    margin: 1em;
+    position: relative !important;
+    padding-bottom: 10px; }
+
+  .buttondemoBasicUsage md-content {
+    margin-right: 7px; }
+
+  .buttondemoBasicUsage section .md-button {
+    margin-top: 16px;
+    margin-bottom: 16px; }
+
+  .buttondemoBasicUsage .label {
+    position: absolute;
+    bottom: 5px;
+    left: 7px;
+    font-size: 14px;
+    opacity: 0.54; }
+</style>
+

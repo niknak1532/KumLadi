@@ -1,0 +1,22 @@
+#div_breadCrums {
+    color: greenyellow;
+}
+
+#div_breadCrums div p{
+    display: inline;
+}
+
+#div_breadCrums div p:hover{
+    color: white;
+    cursor: pointer;
+}
+
+#div_breadCrums div .glyphicon{
+    color: white;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+#div_breadCrums:hover{
+    cursor:default !important;
+}

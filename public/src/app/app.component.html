@@ -1,0 +1,118 @@
+<!--<button style="position: fixed; height: 300px" (click)="dummyData()">PopulateDummies</button>-->
+<app-nav-bar [nb_comp_ids]="nb_comp_ids" [nav_crums]="nav_crums" [userObject]="userObject" (clicked_crumb)="setMessage2($event.postId, $event.heading)" (view_profile)="toProfile()" (logout_emit)="logOut()" (nb_restToDash)="restToDash($event)"></app-nav-bar>
+<app-reports [userObject]="userObject" ></app-reports>
+<app-login id="id_login" [user_Id]="user_Id" [user_password]="user_password" (refreshedPage)="dashBored()" [responseDialog]="responseDialog" (authenticate_User)="login_Attempt($event.usrId, $event.usrPs)"></app-login>
+<img src="../assets/background.png">
+<!--<div id="id_dashboard">-->
+<div id="id_dashboard" style="display: none">
+    <app-side-menu [sm_Posts]="sm_Posts" (selectedMenuItem)="setSibs($event.postId, $event.heading)"></app-side-menu>
+    <app-recent-posts [rp_Posts]="rp_Posts" (rp_selectedItem)="setMessage2($event.postId, $event.heading)" (rp_addToNav)="addToNav($event)"></app-recent-posts>
+    <app-messages [mess_Post]="mess_Post" [upVotes]="upVotes" [downVotes]="downVotes" (mess_post_liked)="likedPost()" (mess_post_disliked)="dislikedPost()" (mess_addToNav)="addToNav($event)"></app-messages>
+    <!--<app-status-bar></app-status-bar>-->
+    <app-sibling-posts [sp_Posts]="sp_Posts" (sp_selectedItem)="setMessage($event.postId, $event.heading)" (sp_addToNav)="addToNav($event)"></app-sibling-posts>
+    <app-subs-list (sl_addToNav)="addToNav($event)"></app-subs-list>
+    <app-comments [co_Posts]="co_Posts" (co_selectedItem)="setMessage2($event.postId, $event.heading)" (co_addToNav)="addToNav($event)"></app-comments>
+</div>
+<link rel="stylesheet" href="https://unpkg.com/@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-system.min.css">
+
+
+<div ondragover="drag_over(event)" ondrop="drop(event)">
+    <div id="div_main" style="height:100vh; width:100%; border:3px solid white; top:0px; left:0px; position: absolute; display:none">
+        <div id="" style="height:100vh; width:100%; border:3px solid white; background-color:#000; opacity: 0.4; top:0px; left:0px; position: absolute; display:none">
+        </div>
+            <div id="txt1" draggable="true" ondragstart="drag_start(event)" style="opacity:1.0; height: 300px; color: white">
+                <div class="div_dance_header" style="opacity:1.0">
+                    <button type="button" class="cancel_dance" style="color:black; opacity:1.0" onclick="document.getElementById('div_main').style.display = 'none'">&times;</button>
+                    <h3>Create Thread</h3>
+                </div>
+                <br>
+                <br>
+                <div class="form-group">
+                    <label >Course Code:</label><button type="button" class="btn btn-warning" style="float:right" (click)="createThread()" onclick="document.getElementById('div_main').style.display = 'none'">Create Thread</button>
+                    <input type="text" value="{{sm_moduleName}}" class="form-control" style="width: 200px" [(ngModel)]="sm_moduleName" disabled>
+                </div>
+                <div class="form-group">
+                    <label >Enter Heading: </label>
+                    <input type="text" value="{{newHeading}}" class="form-control" style="width: 200px" [(ngModel)]="newHeading">
+                </div>
+                <div class="form-group">
+                    <label for="comment">Thread Message Content:</label>
+                    <textarea class="form-control" rows="5" id="comment" [(ngModel)]="newContent"></textarea>
+                </div>
+                <br>
+            </div>
+
+        <div id="txt2" draggable="true" ondragstart="drag_start(event)" style="opacity:1.0; height: 600px;">
+            <div class="div_dance_header" style="opacity:1.0">
+                <button type="button" class="cancel_dance" style="color:black; opacity:1.0" onclick="document.getElementById('div_main').style.display = 'none'">&times;</button>
+                <h3>Reply to Post</h3>
+            </div>
+            <br>
+            <br>
+            <div class="panel-body banana" style="width: 100%; height: 200px; background-color: white; overflow-y: scroll" *ngIf="mess_Post">
+                <h1><b>{{mess_Post.heading}}</b></h1>
+                <p>{{mess_Post.content}}</p>
+                <p style="float: right"><i>Posted on {{mess_Post.timestamp}}</i></p>
+                <br><br>
+                <div class="chip">
+
+                    <div></div></div><br>
+            </div>
+            <div class="form-group">
+                <label >Module Name:</label><button type="button" class="btn btn-warning" style="float:right" (click)="createRespond()" onclick="document.getElementById('div_main').style.display = 'none'">Create Response</button>
+                <input type="text" *ngIf="mess_Post" class="form-control" style="width: 200px" value="{{sm_moduleName}}" disabled>
+                <label >Enter Heading:</label><input type="text" class="form-control" style="width: 200px" value="{{newHeading}}" [(ngModel)]="newHeading">
+            </div>
+            <div class="form-group">
+                <label for="comment">Message Content:</label>
+                <textarea class="form-control" rows="5" value="{{newContent}}" [(ngModel)]="newContent"></textarea>
+            </div>
+            <div class="well" style="width: 90%; height: 30px; padding: 0px; margin-top: 5px; background-color: white">
+                <div *ngFor="let t of tags" style=" display: inline-flex; float: left; margin-left: 5px; margin-bottom: 10px; width: 80px; height: 30px; background-color: deepskyblue; border-radius: 8px; border: dashed 1px darkslateblue">
+                    <span style="color: white; font-size: 20px"> # </span><p contenteditable="true">{{t}}</p>
+                </div>
+                <div *ngIf="tags.length < 6" style="font-size: 20px; display: inline" (click)="tags.push('newTag')"><span class="glyphicon glyphicon-plus-sign"></span></div>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
+
+<style>
+    .div_dance_header{
+        width: 100%;
+        height: 30px;
+        opacity: 1.0;
+        background-color: black;
+        color: white;
+        /*            font-size: 50px;*/
+
+    }
+
+    .cancel_dance{
+        float: right;
+    }
+
+
+
+    .div_dance_message{
+        width: 94%;
+        background-color: white;
+        height: 200px;
+        margin-left: 20px;
+        margin-top: 30px;
+    }
+
+    #txt1, #txt2{
+        width:600px;
+        height: 580px;
+        background-color:#777;
+        position:absolute;
+        border-radius: 20px;
+        border: 3px solid green;
+    }
+
+    #txt1, #txt2 .glyphicon:hover{
+        color: green;
+    }
+</style>

@@ -1,0 +1,91 @@
+<!--<nav class="navbar navbar-fixed-top" role="navigation">-->
+<nav class="navbar" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+
+      </button>
+     <!-- <a class="navbar-brand" href="#">Buzz</a>-->
+      <a href="#" class="btn btn-toolbar btn-lg" id="menuCon">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="glyphicon glyphicon-menu-hamburger"></span>
+        </button>
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Buzz<span class="sr-only">(current)</span></a></li>
+        <li *ngFor="let p of nb_comp_ids">
+          <div href="#" >
+            <ngl-pill  (click)="restoreToDash(p)" *ngIf="(p === 'sibb')" onclick="$('#sibb').animate({top: '65px', opacity: '1.0'}, 'fast').show(100);" style="float: left">
+              <ngl-icon category="standard" icon="feedback" nglPillImage></ngl-icon>
+              <a href="javascript:void(0)">Related Post</a>
+            </ngl-pill>
+            <ngl-pill  (click)="restoreToDash(p)" *ngIf="(p === 'mess')" onclick="$('#message').animate({top: '65px', opacity: '1.0'}, 'fast').show(100);" style="float: left">
+              <ngl-icon category="standard" icon="feedback" nglPillImage></ngl-icon>
+              <a href="javascript:void(0)">Message</a>
+            </ngl-pill>
+            <ngl-pill  (click)="restoreToDash(p)" *ngIf="(p === 'recent')" onclick="$('#recent').animate({top: '55%', opacity: '1.0'}, 'fast').show(100);" style="float: left">
+              <ngl-icon category="standard" icon="feedback" nglPillImage></ngl-icon>
+              <a href="javascript:void(0)">Recent Posts</a>
+            </ngl-pill>
+            <ngl-pill  (click)="restoreToDash(p)" *ngIf="(p === 'comments')" onclick="$('#comments').animate({top: '55%', opacity: '1.0'}, 'fast').show(100);" style="float: left">
+              <ngl-icon category="standard" icon="feedback" nglPillImage></ngl-icon>
+              <a href="javascript:void(0)">Message Responces</a>
+            </ngl-pill>
+            <ngl-pill  (click)="restoreToDash(p)" *ngIf="(p === 'subs')" onclick="$('#subs').animate({top: '80%', opacity: '1.0'}, 'fast').show(100);" style="float: left">
+              <ngl-icon category="standard" icon="feedback" nglPillImage></ngl-icon>
+              <a href="javascript:void(0)">Subscription List</a>
+            </ngl-pill>
+            <!--<ngl-pill  (click)="restoreToDash(p)" *ngIf="(p === 'mess')" onclick="$('#message').animate({top: '65px', opacity: '1.0'}, 'fast').show(100);" style="float: left">-->
+              <!--<ngl-icon category="standard" icon="feedback" nglPillImage></ngl-icon>-->
+              <!--<a href="javascript:void(0)">Message</a>-->
+            <!--</ngl-pill>-->
+          </div>
+        </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#"><b></b></a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#"><span class="glyphicon glyphicon-comment"></span> Chats</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-bell"></span> Interactions</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-th-large"></span> My Groups</a></li>
+            <li onclick="$('#rep_trigger').click()"><a href="#"><span class="glyphicon glyphicon-wrench"></span> Profile</a></li>
+            <li><a href="#"></a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#"><span class="glyphicon glyphicon-flag"></span> Forum Help</a></li>
+            <li onclick="$('button').click(function(){$('h1, h2, .panel').toggleClass('blue');});"><a href="#" ><span class="glyphicon glyphicon-cog" ></span> Settings</a></li>
+            <li (click)="logout()"><a href="#"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Sign-Out</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+<!--<div style=" top: 50px; position: absolute">-->
+  <!--<ngl-breadcrumbs assistiveText="Breadcrumbs" class="slds-m-top&#45;&#45;large" >-->
+    <!--<a *nglBreadcrumb href="javascript:void(0)"><div style="color: white">Home</div></a>-->
+    <!--<a *nglBreadcrumb >Support</a>-->
+    <!--<a *nglBreadcrumb >Support</a>-->
+    <!--<a *nglBreadcrumb >Support</a>-->
+  <!--</ngl-breadcrumbs>-->
+<!--</div>-->
+<div class="panel" style=" top: 50px; position: absolute; width: 100%; height: 20px; background-color: black; border-bottom: 1px solid white" id="div_breadCrums">
+  <div style="float: left">
+    <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
+    <div style="display: inline" *ngFor="let nc of nav_crums" (click)="crum_selected(nc.postId)"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><p>{{nc.heading}}</p></div>
+  </div>
+</div>
+<style>
+
+  .blue{
+      background-color: black;
+  }
+</style>

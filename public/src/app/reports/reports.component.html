@@ -1,0 +1,59 @@
+<p-dialog header="Title" [(visible)]="display" modal="modal" width="900" height="600">
+  <div class="btn-group-vertical" style="width: 300px; height: 500px; border: 1px solid #DDD; display: inline-block">
+    <a href="#" class="btn btn-info" (click)="getReports(1)">Profile</a>
+    <a href="#" class="btn btn-info" (click)="getReports(2)">Subscriptions</a>
+    <a href="#" class="btn btn-info" (click)="getReports(3)">Gamification</a>
+    <a href="#" class="btn btn-info" (click)="getReports(4)">Milestones</a>
+  </div>
+  <div class="panel panel-info" style="width: 550px; height: 500px; border: 1px solid black; display: inline-block; float: right">
+    <div class="panel-heading">
+      <h3 class="panel-title">{{panel_heading}}</h3>
+    </div>
+    <div class="panel-body">
+      <!--{{userObject | json}}-->
+      <div id="rep_profile">
+        <div class="list-group" *ngIf="userObject[0]">
+          <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading"> Username: </h4>
+            <p class="list-group-item-text">{{userObject[0].title}} {{userObject[0].initials}} {{userObject[0].surname}}</p>
+          </a>
+          <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading">E-mail: </h4>
+            <p class="list-group-item-text">{{userObject[0].email}}</p>
+          </a>
+          <a href="#" class="list-group-item">
+            <h4 class="list-group-item-heading">Registered Modules: </h4>
+            <li *ngFor="let p of userObject[0].modules" class="list-group-item">{{p}}</li>
+          </a>
+        </div>
+      </div>
+
+        <div id="rep_gami" style="display:none">
+          <!--<div class="well" style="width: 300px; height: 500px">-->
+            <div style="margin-left: 70px">
+              <img id="img_avatar" src="../../assets/H1U1B1.png" height="300" width="120">
+            </div>
+            <div class="btn-group btn-group-justified">
+              <a href="#" onclick="changeAttire('H')" class="btn btn-default">Hair</a>
+              <a href="#" onclick="changeAttire('U')" class="btn btn-default">Upper</a>
+              <a href="#" onclick="changeAttire('B')" class="btn btn-default">Bottom</a>
+            </div>
+          <!--</div>-->
+          <h2>100 more points till next level</h2>
+          <div class="progress progress-striped active">
+            <div class="progress-bar progress-bar-success" style="width: 35%"></div>
+            <div class="progress-bar progress-bar-warning" style="width: 20%"></div>
+            <div class="progress-bar progress-bar-danger" style="width: 10%"></div>
+          </div>
+        </div>
+      <div id="rep_mile" style="display:none">
+        <button onclick="doThaThings()">XOXO</button>
+        <canvas id="my_canvas" width="400" height="400"></canvas>
+      </div>
+      <!--</div>-->
+    </div>
+  </div>
+</p-dialog>
+
+
+<button type="text" id="rep_trigger" (click)="showDialog()" icon="fa-external-link-square" label="Show" style="display:none">Show</button>

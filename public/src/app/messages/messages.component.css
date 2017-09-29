@@ -1,0 +1,22 @@
+#div_likes_contain{
+
+}
+
+#div_likes_contain div:hover{
+    background-color: green;
+    cursor: pointer;
+}
+
+#div_dislikes_contain div:hover{
+    background-color: red;
+    cursor: pointer;
+}
+
+#div_likes_icon{
+    background-color: cornflowerblue;
+}
+
+#div_dislikes_icon{
+    background-color: darkred;
+}
+
