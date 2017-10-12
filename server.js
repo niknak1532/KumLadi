@@ -122,6 +122,10 @@ var UserSchema = new mongoose.Schema({
 
     photo: {
         type: String
+    },
+    
+    password: {
+	    type: String
     }
 });
 console.log('Initialising model: CS status');
@@ -258,7 +262,8 @@ var io = require('socket.io')(server);
 var _ =require("lodash");
 var path = require('path');
 var cors = require('cors');
-var file = require('./serverA.js')
+var file = require('./serverA.js');
+var nodemailer = require('nodemailer');
 
 app.use(express.static(path.join(__dirname + '/public/dist')));
 
@@ -1573,6 +1578,62 @@ app.get('/getUserIDforPost/:postID', function(req, res, next) {
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*Users*/
+
+/**
+ * @params req.body.userID The user's student number.
+ * @params req.body.password The user's
+*  @params req.body
+ * @todo Add user to LDAP
+ * @return A JSON object will be returned. It will contain a boolean field to indicate if the process succeed. A text field describing how the process went.
+ */
+/*app.post('/addUser', function(req, res, next) {
+	console.log('/addUser');
+	
+	file.addUser(function(msg)  {
+		console.log(msg)
+		return res.status(200).json("Done");
+	});
+});*/
+
+/**
+ * @params req.body.userID The user's student number.
+ * @params req.body.password The user's password
+ * @todo This will query local db to authenticate user
+ * @return A JSON object will be returned. It will contain a boolean field to indicate if the process succeed. A text field describing how the process went.
+ */
+app.post('/login', function(req, res, next) {
+	console.log('/login');
+	
+	Users.findOne({"userID": req.body.userID, "password": req.body.password}, function(err, doc) {
+		if(err) {
+			console.log("An error occured while searching");
+			return res.status(200).json({
+				"status": false, 
+				"text": "An error occured while searching", 
+				"data": []
+			});
+		}
+
+		else if(!doc) {
+			console.log("No user was found in the db");
+			return res.status(200).json({
+				"status": false, 
+				"text": "No user was found in the db", 
+				"data": []
+			});
+		}
+
+		else {
+			console.log("User found in db");
+			return res.status(200).json({
+				"status": true, 
+				"text": "User found in db", 
+				"data": doc
+			});
+		}
+	});
+});
+
 /**
  * @params req.body.userID The user's student number.
  * @params req.body.password The user's
@@ -1986,7 +2047,7 @@ app.patch('/updateUserInfo', function(req, res, next) {
  * @return A JSON object will be returned. It will contain a boolean field to indicate if the process succeed. A text field describing how the process went.
  */
 app.get('/adminModules/:userID', function(req, res, next) {
-    console.log('//adminModules/:userID');
+    console.log('/adminModules/:userID');
     Users.findOne({"userID" : req.params.userID}, function(err, doc) {
         if(err) {
             console.log("An error occured while searching");
@@ -3433,39 +3494,39 @@ app.get('/getAllGroups', function(req, res, next) {
 
 
 /**
- * @params req.body.groupName The groups's name.
- * @params req.body.peers The array of peers to join the group.
- * @todo Join an already created group
- * @return A JSON object will be returned. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
- */
+* @params req.body.groupName The groups's name.
+* @params req.body.peers The array of peers to join the group.
+* @todo Join an already created group
+* @return A JSON object will be returned. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
+*/
 app.patch('/joinGroup', function(req, res, next) {
-    console.log('/joinGroup');
+	console.log('/joinGroup');
 
-    groupChat.findOne({'groupName':req.body.groupName}, function(err, doc) {
-        if(err) {
-            console.log('An error occured while searching');
-            return res.status(200).json({
-                "text":err,
-                "status": "false",
-                "data": []
-            });
-        }
+	groupChat.findOne({'groupName':req.body.groupName}, function(err, doc) {
+		if(err) {
+			console.log('An error occured while searching');
+			return res.status(200).json({
+				"text":err, 
+				"status": "false", 
+				"data": []
+			});
+		}
 
-        else if(!doc.length == 0) {
-            console.log('Failed to find documents');
-            return res.status(200).json({
-                "status": "false",
-                "text": "No documents found",
-                "data": []
-            });
-        }
+		else if(!doc.length == 0) {
+			console.log('Failed to find documents');
+			return res.status(200).json({
+				"status": "false",
+				"text": "No documents found", 
+				"data": []
+			});
+		}
 
-        else {
+		else {
             if(req.body.peers.length == 0) {
                 console.log("No users in request body");
                 return res.status(200).json({
-                    "status": false,
-                    "text": "No users in request body",
+                    "status": false, 
+                    "text": "No users in request body", 
                     "data": []
                 });
             }
@@ -3477,9 +3538,9 @@ app.patch('/joinGroup', function(req, res, next) {
                     if(doc.peers[t] == req.body.peers) {
                         status = true;
                         break;
-                    }
+                    }        
                 }
-
+                
 
                 if(status == false) {
                     doc.peers.push(req.body.peers);
@@ -3502,8 +3563,8 @@ app.patch('/joinGroup', function(req, res, next) {
                         if(err) {
                             console.log("An error occured while searching for a user");
                             return res.status(200).json({
-                                "status": false,
-                                "text": "An error occured while searching for a user",
+                                "status": false, 
+                                "text": "An error occured while searching for a user", 
                                 "data": []
                             });
                         }
@@ -3511,7 +3572,7 @@ app.patch('/joinGroup', function(req, res, next) {
                         else if(doc) {
                             console.log("No user was found");
                             return res.status(200).json({
-                                "status": false,
+                                "status": false, 
                                 "text": "No user was found",
                                 "data": []
                             });
@@ -3525,8 +3586,8 @@ app.patch('/joinGroup', function(req, res, next) {
                                 if(err) {
                                     console.log("An error occured while saving");
                                     return res.status(200).json({
-                                        "status": false,
-                                        "text": "An error occured while saving",
+                                        "status": false, 
+                                        "text": "An error occured while saving", 
                                         "data": []
                                     });
                                 }
@@ -3534,8 +3595,8 @@ app.patch('/joinGroup', function(req, res, next) {
                                 else if(!obj) {
                                     console.log("Could not save user");
                                     return res.status(200).json({
-                                        "status": false,
-                                        "text": "Could not save user",
+                                        "status": false, 
+                                        "text": "Could not save user", 
                                         "data": []
                                     });
                                 }
@@ -3543,16 +3604,16 @@ app.patch('/joinGroup', function(req, res, next) {
                                 else {
                                     console.log("Saving user");
                                     return res.status(200).json({
-                                        "status": 200,
-                                        "text": "User saved in db",
+                                        "status": 200, 
+                                        "text": "User saved in db", 
                                         "groupName": req.body.groupName
                                     })
                                 }
                             })
                             return res.status(200).json({
-                                "status": 200,
-                                "text": "Adding user to the group",
-                                "group": doc.groupName,
+                                "status": 200, 
+                                "text": "Adding user to the group", 
+                                "group": doc.groupName, 
                                 "peers": doc.peers
                             });
                         }
@@ -3562,8 +3623,8 @@ app.patch('/joinGroup', function(req, res, next) {
                 else if(status == true){
                     console.log("User already in group");
                     return res.status(200).json({
-                        "status": false,
-                        "text": "User already in group",
+                        "status": false, 
+                        "text": "User already in group", 
                         "data": []
                     });
                 }
@@ -3581,7 +3642,7 @@ app.patch('/joinGroup', function(req, res, next) {
                     }
 
                     if(status == true)
-                        break;
+                         break;
                 }
 
 
@@ -3622,8 +3683,8 @@ app.patch('/joinGroup', function(req, res, next) {
                         if(err) {
                             console.log("An error occured while saving");
                             return res.status(200).json({
-                                "status": false,
-                                "text": "An error occured while saving",
+                                "status": false, 
+                                "text": "An error occured while saving", 
                                 "data": []
                             });
                         }
@@ -3632,7 +3693,7 @@ app.patch('/joinGroup', function(req, res, next) {
                             console.log("Document could not be saved");
                             return res.status(200).json({
                                 "status": false,
-                                "text": "Document could not be saved",
+                                "text": "Document could not be saved", 
                                 "data": []
                             });
                         }
@@ -3640,8 +3701,8 @@ app.patch('/joinGroup', function(req, res, next) {
                         else {
                             console.log("Document saved");
                             return res.status(200).json({
-                                "status": 200,
-                                "text": "Documents saved",
+                                "status": 200, 
+                                "text": "Documents saved", 
                                 "data": obj
                             });
                         }
@@ -3651,15 +3712,15 @@ app.patch('/joinGroup', function(req, res, next) {
                 else{
                     console.log("User already in the group");
                     return res.status(200).json({
-                        "status": false,
-                        "text": "User already in the group",
+                        "status": false, 
+                        "text": "User already in the group", 
                         "data": []
                     });
                 }
             }
-        }
-    });
-});
+		}
+	});
+})
 
 /**
  * @params req.body.groupName The groups's name.
@@ -4421,6 +4482,171 @@ app.get('/getMilestones', function(req, res, next) {
     });
 });
 
+/**
+* @todo Get a list of completed milestones
+* @return A JSON object will be returned with array of posts. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
+*/
+app.get('/getCompletedMilestone', function(req, res, next) {
+	console.log('/getCompletedMilestone');
+	
+	milestone.find({}, function(err, doc) {
+		if(err) {
+			console.log("An error occured while searching");
+			return res.status(200).json({
+				"status": false, 
+				"text": "An error occured while searching", 
+				"data":[]
+			});
+		}
+		
+		else if(doc.length == 0) {
+			console.log("No milestones were found");
+			return res.status(200).json({
+				"status": false,
+				"text": "No milestones were found", 
+				"data": []
+			});
+		}
+		
+		else {
+			console.log("Cheching for completed milestones");
+			var data = [];
+			
+			for(var i in doc) {
+				if(doc[i].usersCompletedMilestone.length != 0) {
+					data.push(doc[i].milestoneName);
+				}
+			};
+			
+			if(data.length != 0) {
+				return res.status(200).json({
+					"status": false, 
+					"text": "No milestones have been achieved", 
+					"data": []
+				});
+			}
+			
+			else {
+				return res.status(200).json({
+					"status": true, 
+					"text": "Milestones have been completed", 
+					"data": data
+				});
+			}
+		}
+	});
+});
+
+/**
+* @todo get list of uncompleted milestones
+* @return A JSON object will be returned with array of posts. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
+*/
+app.get('/getUncompletedMilestones', function(req, res, next) {
+	console.log("/getUncompletedMilestones");
+	
+	milestone.find({}, function(err, doc) {
+		if(err) {
+			console.log("An error occured while searching");
+			return res.status(200).json({
+				"status": false, 
+				"text": "An error occured while searching", 
+				"data": []
+			});
+		}
+		
+		else if(doc.length == 0) {
+			console.log("No milestones were found");
+			return res.status(200).json({
+				"status": false, 
+				"text": "No milestones were found", 
+				"data": []
+			});
+		}
+		
+		else {
+			console.log("Checking for uncompleted milestones");
+			var data = [];
+			for(var i in doc) {
+				if(doc[i].usersCompletedMilestone.length == 0) {
+					data.push(doc[i].milestoneName);
+				}
+			}
+			
+			if(data.length != 0) {
+				return res.status(200).json({
+					"status": false, 
+					"text": "Milestones have been achieved", 
+					"data": []
+				});
+			}
+			
+			else {
+				return res.status(200).json({
+					"status": true, 
+					"text": "No milestones have been completed", 
+					"data": data
+				});
+			}
+		}
+	});
+});
+
+/**
+* @todo Return a list of expired milestones
+* @return A JSON object will be returned with array of posts. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
+*/
+app.get('/getExpiredMilestones', function(req, res, next) {
+	console.log("/getExpiredMilestones");
+	
+	milestone.find({}, function(err, doc) {
+		if(err) {
+			console.log("An error occured while searching");
+			return res.status(200).json({
+				"status": false, 
+				"text": "An error occured while searching", 
+				"data": []
+			});
+		}
+		
+		else if(doc.length == 0) {
+			console.log("No milestones were found");
+			return res.status(200).json({
+				"status": false,
+				"text": "No milestones were found", 
+				"data":[]
+			});
+		}
+		
+		else {
+			console.log("Checking expired milestones");
+			var dateToday = new Date();
+			var data = [];
+			
+			for(var i in doc) {
+				if(doc[i].expiry_date < dateToday) {
+					data.push(doc[i].milestoneName);
+				}
+			}
+			
+			if(data.length != 0) {
+				return res.status(200).json({
+					"status": true, 
+					"text": "Returing expired milestones", 
+					"data": data
+				});
+			}
+			
+			else {
+				return res.status(200).json({
+					"status": false, 
+					"text": "No expired milestones", 
+					"data": []
+				});
+			}
+		}
+	});
+});
+
 //9th Oct
 /**
  * @param req.params.userID The user's ID.
@@ -4515,5 +4741,53 @@ app.get("/getUserVotes/:userID/:courseCode",function(req,res,next){
     }
 });
 
+var buzzPass = "Upbuzzforum301";
+var fromSender = "upbuzzforum@gmail.com";
+var sendTO = "networkTest332@gmail.com";
+
+/**
+* @params req.body.userID The person who made the post
+* @params req.body.threadName The name of the thread/topic
+* @params req.body.email Email address of the user receiving 
+* @todo Return a list of expired milestones
+* @return A JSON object will be returned with array of posts. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
+*/
+app.post('/sendMail', function(req, res, next) {
+    console.log('/sendMail');
+
+    nodemailer.createTestAccount((err, account) => {
+        var transporter = nodemailer.createTransport({
+            host: 'smtp.gmail.com', 
+            port: 587, 
+            secure: false, 
+            auth: {
+                user: fromSender, 
+                pass: buzzPass
+            }
+        });
+
+        var mailOptions = {
+            from: fromSender, 
+            to: sendTO, 
+            subject: "Buzz forum notification", 
+            text: "Hello, you're recieving this notification", 
+        };
+
+        transporter.sendMail(mailOptions, (err, info) => {
+            if(err) {
+                console.log(err);
+                return res.status(200).json({
+                    "status": 200, 
+                    "text": err, 
+                    "data": []
+                });
+            }
+
+            console.log("Message sent");
+            transporter.close();
+            return res.status(200).json("Done sending email");
+        });
+    });
+});
 
 app.listen(port, ()=> console.log("Server running at " + port));
