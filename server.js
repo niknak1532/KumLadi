@@ -17,7 +17,7 @@ var Post_module = new mongoose.Schema({
 		type: String
 	},
 	viewed:{
-		type:[]
+		type:[String]
 	},
 	emoji:{
 		type:String,
@@ -80,7 +80,10 @@ var VoteSchema=new mongoose.Schema({
     },
     downVotes:{
         type:[String]
-    }
+    },
+	userID:{
+		type:String
+	}
 });
 console.log('Initialising model: user');
 var UserSchema = new mongoose.Schema({
@@ -122,10 +125,6 @@ var UserSchema = new mongoose.Schema({
 
     photo: {
         type: String
-    },
-    
-    password: {
-	    type: String
     }
 });
 console.log('Initialising model: CS status');
@@ -262,8 +261,7 @@ var io = require('socket.io')(server);
 var _ =require("lodash");
 var path = require('path');
 var cors = require('cors');
-var file = require('./serverA.js');
-var nodemailer = require('nodemailer');
+var file = require('./serverA.js')
 
 app.use(express.static(path.join(__dirname + '/public/dist')));
 
@@ -272,7 +270,7 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use(bodyParser.json());
 app.use(cors());
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 3045;
 
 var ldapModuleResponse = null;
 //**************************************************8
@@ -330,34 +328,25 @@ app.get("/attempt/:userID",function(req,res,next){
 					var count =0;
 					var docs=[];
 					_.forEach(user.modules,function(code){
-						Votes.find({course_code:code},function(err,votes){
+						Votes.find({course_code:code,userID:req.params.userID},function(err,votes){
 							if(err)
 							{
 								console.log("Error: "+err);
 							}
 							if(votes.length)
 							{
-								var num=0;
+								var num=0,upv=0,dov=0;
 								for(var i=0;i<votes.length;i++)
 								{
-									for(var j=0;j<votes[i].upVotes.length;j++)
-									{
-										if(votes[i].upVotes[j]==req.params.userID)
-										{
-											num++;
-										}
-									}
-									for(var j=0;j<votes[i].downVotes.length;j++)
-									{
-										if(votes[i].downVotes[j]==req.params.userID)
-										{
-											num++;
-										}
-									}
+									num+=votes[i].upVotes.length+votes[i].downVotes.length;
+									upv+=votes[i].upVotes.length;
+									dov+=votes[i].downVotes.length;
 								}
 								console.log("Found votes in "+code+" for user "+req.params.userID);
 								docs.push({
 									numVotes:num,
+									numUpVotes:upv,
+									numDownVotes:dov,
 									module:code
 								});
 							}
@@ -366,6 +355,8 @@ app.get("/attempt/:userID",function(req,res,next){
 								console.log("Found no votes in "+code+" for user "+req.params.userID);
 								docs.push({
 									numVotes:0,
+									numUpVotes:0,
+									numDownVotes:0,
 									module:code
 								});
 							}
@@ -404,6 +395,7 @@ app.get("/attempt/:userID",function(req,res,next){
 	});
 	
 });
+
 /**
 * @params req.params.postID The child post's ID.
 * @todo It will find the child post's parent, if it exists.
@@ -509,7 +501,8 @@ app.post('/createPost',function(req,res,next){
         timestamp: new Date(),
         student_number:req.body.student_number,
         content:req.body.content,
-        tag_list:req.body.tag_list
+        tag_list:req.body.tag_list,
+		bounty_assigned:((req.body.bounty)? req.body.bounty:0)
     });
     // saving the new post
     post.save(function(err, obj){
@@ -841,7 +834,8 @@ app.post('/addPost/:parentID',function(req,res,next){
                 timestamp: new Date(),
                 student_number:req.body.student_number,
                 content:req.body.content,
-                tag_list:req.body.tag_list
+                tag_list:req.body.tag_list,
+				bounty_assigned:((req.body.bounty)? req.body.bounty:0)
 
             });
             console.log("Inserting at id "+post._id);
@@ -1060,23 +1054,23 @@ app.get('/getPosts/:course_code/:userID',function(req,res,next){
     {
         Posts.find({"level_number":0,"course_code":req.params.course_code},['_id','heading','level_number'],{sort:{"timestamp":-1}},function(err,doc){
             var docs=[];
-            if(doc)
+            if(doc.length)
             {
-                // _.forEach(doc,function(u){
-                //     docs.push({
-                //         postID:u._id,
-                //         heading:u.heading,
-					// 	viewed:false
-                //     });
-					// for(var i in u.viewed)
-					// {
-					// 	if(req.params.userID==u.viewed[i])
-					// 	{
-					// 		docs[docs.length-1].viewed=true;
-					// 	}
-					// }
-                // });
-				docs.push(doc.length);
+                _.forEach(doc,function(u){
+                    docs.push({
+                        postID:u._id,
+                        heading:u.heading,
+						viewed:false
+                    });
+					for(var i in u.viewed)
+					{
+						if(req.params.userID==u.viewed[i])
+						{
+							docs[docs.length-1].viewed=true;
+						}
+					}
+                });
+
             }
             if(err)
             {
@@ -1147,110 +1141,127 @@ app.get('/getSiblings/:postID/:userID',function(req,res,next){
             }
             if(child.parent_ID==null)
             {
-                console.log("Post does not have a parent");
-                
-                Posts.find({"level_number":0,"course_code":child.course_code},['heading','_id','level_number','viewed','timestamp','student_number'],{skip:0,limit:10,sort:{"timestamp":-1}},function(err,doc){
-					var docs=[];
+				console.log("No parent post");
+				return res.status(200).json({
+					"data":[],
+					"status":true,
+					"text":"No parent post"
+				});
+			}
+            else
+            {
+				Posts.findById(child.parent_ID,function(err,par){
 					if(err)
 					{
-						console.log("Encountered error while retriving documents");
+						console.log("Error: "+err);
 						res.status(200).json({
-							"status":false,
 							"data":[],
+							"status":false,
 							"text":err
 						});
 					}
-					else if(doc.length)
+					else if(par)
 					{
-						_.forEach(doc,function(u){
-							docs.push({
-								heading:u.heading,
-								postID:u._id,
-								viewed:false,
-								userID:u.student_number,
-								timestamp:u.timestamp
-							});
-							for(var i in u.viewed)
-							{
-								if(u.viewed[i]==req.params.userID)
-								{
-									docs[docs.length-1].viewed=true;
-									break;
-								}
-							}
-						});
-						if(docs.length==null||docs.length==0)
+						//console.log("Found parent: "+mongoose.Types.ObjectId(par.parent_ID));
+						console.log("Found parent: "+par.parent_ID);
+						if(par.parent_ID!=null)
 						{
-							console.log("No posts were found");
+							Posts.find({parent_ID:mongoose.Types.ObjectId(par.parent_ID),course_code:par.course_code},function(err,sibs){
+								if(err)
+								{
+									console.log("Error: "+err);
+									res.status(200).json({
+										"data":[],
+										"status":false,
+										"text":err
+									});
+								}
+								else if(sibs.length)
+								{
+									console.log("Found and returning");
+									var docs=[];
+									for(var i in sibs)
+									{
+										docs.push({
+											postID:sibs[i]._id,
+											heading:sibs[i].heading,
+											userID:sibs[i].student_number,
+											timestamp:sibs[i].timestamp,
+											viewed:false
+										});
+									}
+									return res.status(200).json({
+										"data":docs,
+										"status":true,
+										"text":"Found and returning"
+									});
+								}
+								else
+								{
+									console.log("Found nothing and returning")
+									res.status(200).json({
+										"data":[],
+										"status":true,
+										"text":"Found nothing and returning"
+									});
+								}
+							});
 						}
 						else
 						{
-							console.log("Found all the level-0 posts");
+							Posts.find({level_number:0,course_code:par.course_code},function(err,sibs){
+								if(err)
+								{
+									console.log("Error: "+err);
+									res.status(200).json({
+										"data":[],
+										"status":false,
+										"text":err
+									});
+								}
+								else if(sibs.length)
+								{
+									console.log("Found and returning");
+									var docs=[];
+									for(var i in sibs)
+									{
+										docs.push({
+											postID:sibs[i]._id,
+											heading:sibs[i].heading,
+											userID:sibs[i].student_number,
+											timestamp:sibs[i].timestamp,
+											viewed:false
+										});
+									}
+									return res.status(200).json({
+										"data":docs,
+										"status":true,
+										"text":"Found and returning"
+									});
+								}
+								else
+								{
+									console.log("Found nothing and returning")
+									res.status(200).json({
+										"data":[],
+										"status":true,
+										"text":"Found nothing and returning"
+									});
+								}
+							});
 						}
-						res.status(200).json({
-							"data":docs,
-							"status":true,
-							"text":"Found documents"
-						});
 					}
 					else
 					{
+						console.log("Not found");
 						res.status(200).json({
 							"data":[],
-							"status":true,
-							"text":"could not find any documents"
+							"status":false,
+							"text":"Not found"
 						});
 					}
 				});
-            }
-            else
-            {
-	            Posts.find({parent_ID:mongoose.Types.ObjectId(child.parent_ID)},['heading','_id','level_number','student_number','timestamp'],{skip:0,limit:10,sort:{"timestamp":-1}},function(err,par){
-	                if(err)
-	                {
-	                    console.log(err);
-	                    return res.status(200).json({
-	                        status:false,
-	                        text:err,
-	                        data:[]
-	                    });
-	                }
-	                if(!par.length)
-	                {
-	                    console.log("Cannot find parent post");
-	                    return res.status(200).json({
-	                        status:false,
-	                        text:"Cannot find parent post",
-	                        data:[]
-	                    });
-	                }
-	                var docs=[];
-	                _.forEach(par,function(u){
-	                    docs.push({
-	                        heading:u.heading,
-	                        postID:u._id,
-	                        userID:u.student_number,
-	                        timestamp:u.timestamp,
-							viewed:false
-	                    });
-						for(var i in u.viewed)
-						{
-							if(u.viewed[i]==req.params.userID)
-							{
-								docs[docs.length-1].viewed=true;
-								break;
-							}
-						}
-	                });
-	                console.log("Found siblings");
-	                return res.status(200).json({
-	                    status:true,
-	                    text:"Found siblings",
-	                    data:docs
-	                });
-	            
-            	});
-	        }
+			}
         });
     }
     else
@@ -1578,62 +1589,6 @@ app.get('/getUserIDforPost/:postID', function(req, res, next) {
 })
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*Users*/
-
-/**
- * @params req.body.userID The user's student number.
- * @params req.body.password The user's
-*  @params req.body
- * @todo Add user to LDAP
- * @return A JSON object will be returned. It will contain a boolean field to indicate if the process succeed. A text field describing how the process went.
- */
-/*app.post('/addUser', function(req, res, next) {
-	console.log('/addUser');
-	
-	file.addUser(function(msg)  {
-		console.log(msg)
-		return res.status(200).json("Done");
-	});
-});*/
-
-/**
- * @params req.body.userID The user's student number.
- * @params req.body.password The user's password
- * @todo This will query local db to authenticate user
- * @return A JSON object will be returned. It will contain a boolean field to indicate if the process succeed. A text field describing how the process went.
- */
-app.post('/login', function(req, res, next) {
-	console.log('/login');
-	
-	Users.findOne({"userID": req.body.userID, "password": req.body.password}, function(err, doc) {
-		if(err) {
-			console.log("An error occured while searching");
-			return res.status(200).json({
-				"status": false, 
-				"text": "An error occured while searching", 
-				"data": []
-			});
-		}
-
-		else if(!doc) {
-			console.log("No user was found in the db");
-			return res.status(200).json({
-				"status": false, 
-				"text": "No user was found in the db", 
-				"data": []
-			});
-		}
-
-		else {
-			console.log("User found in db");
-			return res.status(200).json({
-				"status": true, 
-				"text": "User found in db", 
-				"data": doc
-			});
-		}
-	});
-});
-
 /**
  * @params req.body.userID The user's student number.
  * @params req.body.password The user's
@@ -2047,7 +2002,7 @@ app.patch('/updateUserInfo', function(req, res, next) {
  * @return A JSON object will be returned. It will contain a boolean field to indicate if the process succeed. A text field describing how the process went.
  */
 app.get('/adminModules/:userID', function(req, res, next) {
-    console.log('/adminModules/:userID');
+    console.log('//adminModules/:userID');
     Users.findOne({"userID" : req.params.userID}, function(err, doc) {
         if(err) {
             console.log("An error occured while searching");
@@ -2088,34 +2043,34 @@ app.get('/studentsInModule/:module', function(req, res, next) {
     console.log("/studentsInModule/:module");
 
     Users.find({modules:req.params.module},["userID"],{},function(err,users){
-        if(err)
-        {
-            console.log("Error: ");
-            return res.status(200).json({
-                status:false,
-                text:err,
-                data:[]
-            });
-        }
-        else if(users.length)
-        {
-            console.log("found");
-            return res.status(200).json({
-                status:true,
-                text:"found",
-                data:users
-            });
-        }
-        else
-        {
-            console.log("Nothing found");
-            return res.status(200).json({
-                status:false,
-                text:"Nothingd found",
-                data:[]
-            });
-        }
-    });
+		if(err)
+		{
+			console.log("Error: ");
+			return res.status(200).json({
+				status:false,
+				text:err,
+				data:[]
+			});
+		}
+		else if(users.length)
+		{
+			console.log("found");
+			return res.status(200).json({
+				status:true,
+				text:"found",
+				data:users
+			});
+		}
+		else
+		{
+			console.log("Nothing found");
+			return res.status(200).json({
+				status:false,
+				text:"Nothingd found",
+				data:[]
+			});
+		}
+	});
 });
 
 ///////////////////////////////////////////csStatus///////////////////////////////////////////////////////////////
@@ -2646,6 +2601,7 @@ app.post('/upVote',function(req,res,next){
                         postID:post._id,
 						course_code:post.course_code,
                         upVotes:[req.body.student_number],
+						userID:post.student_number,
                         downVotes:[]
                     });
                     v.save(function(err,vote){
@@ -2781,6 +2737,7 @@ app.post('/downVote',function(req,res,next){
                         postID:post._id,
 						course_code:post.course_code,
                         downVotes:[req.body.student_number],
+						userID:post.student_number,
                         upVotes:[]
                     });
                     v.save(function(err,vote){
@@ -3492,234 +3449,83 @@ app.get('/getAllGroups', function(req, res, next) {
     });
 });
 
-
 /**
-* @params req.body.groupName The groups's name.
-* @params req.body.peers The array of peers to join the group.
-* @todo Join an already created group
-* @return A JSON object will be returned. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
-*/
+ * @params req.body.groupName The groups's name.
+ * @params req.body.peers The array of peers to join the group.
+ * @todo Join an already created group
+ * @return A JSON object will be returned. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
+ */
 app.patch('/joinGroup', function(req, res, next) {
-	console.log('/joinGroup');
+    console.log('/joinGroup');
 
-	groupChat.findOne({'groupName':req.body.groupName}, function(err, doc) {
-		if(err) {
-			console.log('An error occured while searching');
-			return res.status(200).json({
-				"text":err, 
-				"status": "false", 
-				"data": []
-			});
-		}
+    groupChat.findOne({'groupName':req.body.groupName}, function(err, doc) {
+        if(err) {
+            console.log('An error occured while searching');
+            return res.status(200).json({
+                "text":err,
+                "status": "false",
+                "data": []
+            });
+        }
 
-		else if(!doc.length == 0) {
-			console.log('Failed to find documents');
-			return res.status(200).json({
-				"status": "false",
-				"text": "No documents found", 
-				"data": []
-			});
-		}
+        else if(!doc.length == 0) {
+            console.log('Failed to find documents');
+            return res.status(200).json({
+                "status": "false",
+                "text": "No documents found",
+                "data": []
+            });
+        }
 
-		else {
-            if(req.body.peers.length == 0) {
-                console.log("No users in request body");
-                return res.status(200).json({
-                    "status": false, 
-                    "text": "No users in request body", 
-                    "data": []
-                });
-            }
-
-            else if(req.body.peers.length == 1) {
-                var status = false;
-
-                for(var t in doc.peers) {
-                    if(doc.peers[t] == req.body.peers) {
-                        status = true;
-                        break;
-                    }        
-                }
-                
-
-                if(status == false) {
-                    doc.peers.push(req.body.peers);
-
-                    doc.save(function(err, obj) {
-                        if(err) {
-                            console.log("An error occured while saving");
-                        }
-
-                        else if(obj.length == 0) {
-                            console.log("Could not save document");
-                        }
-
-                        else {
-                            console.log("User added to the group");
-                        }
-                    });
-
-                    Users.findOne({"userID": req.body.peers}, function(err, doc) {
-                        if(err) {
-                            console.log("An error occured while searching for a user");
-                            return res.status(200).json({
-                                "status": false, 
-                                "text": "An error occured while searching for a user", 
-                                "data": []
-                            });
-                        }
-
-                        else if(doc) {
-                            console.log("No user was found");
-                            return res.status(200).json({
-                                "status": false, 
-                                "text": "No user was found",
-                                "data": []
-                            });
-                        }
-
-                        else {
-                            console.log("Adding user to groups joined");
-                            doc.groupsJoinedTo.push(doc.userID);
-
-                            doc.save(function(err, obj) {
-                                if(err) {
-                                    console.log("An error occured while saving");
-                                    return res.status(200).json({
-                                        "status": false, 
-                                        "text": "An error occured while saving", 
-                                        "data": []
-                                    });
-                                }
-
-                                else if(!obj) {
-                                    console.log("Could not save user");
-                                    return res.status(200).json({
-                                        "status": false, 
-                                        "text": "Could not save user", 
-                                        "data": []
-                                    });
-                                }
-
-                                else {
-                                    console.log("Saving user");
-                                    return res.status(200).json({
-                                        "status": 200, 
-                                        "text": "User saved in db", 
-                                        "groupName": req.body.groupName
-                                    })
-                                }
-                            })
-                            return res.status(200).json({
-                                "status": 200, 
-                                "text": "Adding user to the group", 
-                                "group": doc.groupName, 
-                                "peers": doc.peers
-                            });
-                        }
-                    });
+        else {
+            console.log('Adding peers to group');
+            if(req.body.peers != null && req.body.peers.length != 0) {
+                for(var i in req.body.peers) {
+                    doc.peers.push(req.body.peers[i]);
                 }
 
-                else if(status == true){
-                    console.log("User already in group");
-                    return res.status(200).json({
-                        "status": false, 
-                        "text": "User already in group", 
-                        "data": []
-                    });
-                }
-            }
-
-            else { //More than one peer in array passed
-                var status = false;
-
-                for(var r in doc.peers) {
-                    for(var e in req.body.peers) {
-                        if(doc.peers[r] == req.body.peers[e]) {
-                            status = true;
-                            break;
-                        }
-                    }
-
-                    if(status == true)
-                         break;
-                }
-
-
-                if(status == false) {
-                    for(var i in req.body.peers) {
-                        doc.peers.push(req.body.peers[i]);
-                        Users.findOne({"userID": req.body.peers[i]}, function(err, user) {
-                            if(err) {
-                                console.log("An error occured while searching for user");
-                            }
-
-                            else if(user.length == 0) {
-                                console.log("Could nit find user");
-                            }
-
-                            else {
-                                user.groupsJoinedTo.push(req.body.groupName);
-                                console.log("Added user to group");
-
-                                user.save(function(err, doc) {
-                                    if(err) {
-                                        console.log("An error occured while saving");
-                                    }
-
-                                    else if(doc.length == 0) {
-                                        console.log("Document could not be found");
-                                    }
-
-                                    else {
-                                        console.log("User added to group");
-                                    }
-                                })
-                            }
+                doc.save(function(err, obj) {
+                    if(err) {
+                        console.log('An error occured while searching');
+                        return res.status(200).json({
+                            "status": false,
+                            "text": err,
+                            "data": []
                         });
                     }
 
-                    doc.save(function(err, obj) {
-                        if(err) {
-                            console.log("An error occured while saving");
-                            return res.status(200).json({
-                                "status": false, 
-                                "text": "An error occured while saving", 
-                                "data": []
-                            });
-                        }
+                    else if(!obj) {
+                        console.log('Group does not exist');
+                        return res.status(200).json({
+                            "status": false,
+                            "text": "Group does not exist",
+                            "data": []
+                        });
+                    }
 
-                        else if(obj.length == 0) {
-                            console.log("Document could not be saved");
-                            return res.status(200).json({
-                                "status": false,
-                                "text": "Document could not be saved", 
-                                "data": []
-                            });
-                        }
-
-                        else {
-                            console.log("Document saved");
-                            return res.status(200).json({
-                                "status": 200, 
-                                "text": "Documents saved", 
-                                "data": obj
-                            });
-                        }
-                    });
-                }
-
-                else{
-                    console.log("User already in the group");
-                    return res.status(200).json({
-                        "status": false, 
-                        "text": "User already in the group", 
-                        "data": []
-                    });
-                }
+                    else {
+                        console.log(req.body.peers + ' added to group');
+                        return res.status(200).json({
+                            "status":200,
+                            "text": "User added to group",
+                            "GroupName": obj.groupName,
+                            "Initiator": obj.initiator,
+                            "Peers": obj.peers
+                        });
+                    }
+                });
             }
-		}
-	});
+
+            else {
+                console.log("No peers in request body");
+                return res.status(200).json({
+                    status: false,
+                    text: "No peers in request body",
+                    data: []
+                });
+            }
+        }
+    });
 })
 
 /**
@@ -4482,171 +4288,6 @@ app.get('/getMilestones', function(req, res, next) {
     });
 });
 
-/**
-* @todo Get a list of completed milestones
-* @return A JSON object will be returned with array of posts. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
-*/
-app.get('/getCompletedMilestone', function(req, res, next) {
-	console.log('/getCompletedMilestone');
-	
-	milestone.find({}, function(err, doc) {
-		if(err) {
-			console.log("An error occured while searching");
-			return res.status(200).json({
-				"status": false, 
-				"text": "An error occured while searching", 
-				"data":[]
-			});
-		}
-		
-		else if(doc.length == 0) {
-			console.log("No milestones were found");
-			return res.status(200).json({
-				"status": false,
-				"text": "No milestones were found", 
-				"data": []
-			});
-		}
-		
-		else {
-			console.log("Cheching for completed milestones");
-			var data = [];
-			
-			for(var i in doc) {
-				if(doc[i].usersCompletedMilestone.length != 0) {
-					data.push(doc[i].milestoneName);
-				}
-			};
-			
-			if(data.length != 0) {
-				return res.status(200).json({
-					"status": false, 
-					"text": "No milestones have been achieved", 
-					"data": []
-				});
-			}
-			
-			else {
-				return res.status(200).json({
-					"status": true, 
-					"text": "Milestones have been completed", 
-					"data": data
-				});
-			}
-		}
-	});
-});
-
-/**
-* @todo get list of uncompleted milestones
-* @return A JSON object will be returned with array of posts. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
-*/
-app.get('/getUncompletedMilestones', function(req, res, next) {
-	console.log("/getUncompletedMilestones");
-	
-	milestone.find({}, function(err, doc) {
-		if(err) {
-			console.log("An error occured while searching");
-			return res.status(200).json({
-				"status": false, 
-				"text": "An error occured while searching", 
-				"data": []
-			});
-		}
-		
-		else if(doc.length == 0) {
-			console.log("No milestones were found");
-			return res.status(200).json({
-				"status": false, 
-				"text": "No milestones were found", 
-				"data": []
-			});
-		}
-		
-		else {
-			console.log("Checking for uncompleted milestones");
-			var data = [];
-			for(var i in doc) {
-				if(doc[i].usersCompletedMilestone.length == 0) {
-					data.push(doc[i].milestoneName);
-				}
-			}
-			
-			if(data.length != 0) {
-				return res.status(200).json({
-					"status": false, 
-					"text": "Milestones have been achieved", 
-					"data": []
-				});
-			}
-			
-			else {
-				return res.status(200).json({
-					"status": true, 
-					"text": "No milestones have been completed", 
-					"data": data
-				});
-			}
-		}
-	});
-});
-
-/**
-* @todo Return a list of expired milestones
-* @return A JSON object will be returned with array of posts. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
-*/
-app.get('/getExpiredMilestones', function(req, res, next) {
-	console.log("/getExpiredMilestones");
-	
-	milestone.find({}, function(err, doc) {
-		if(err) {
-			console.log("An error occured while searching");
-			return res.status(200).json({
-				"status": false, 
-				"text": "An error occured while searching", 
-				"data": []
-			});
-		}
-		
-		else if(doc.length == 0) {
-			console.log("No milestones were found");
-			return res.status(200).json({
-				"status": false,
-				"text": "No milestones were found", 
-				"data":[]
-			});
-		}
-		
-		else {
-			console.log("Checking expired milestones");
-			var dateToday = new Date();
-			var data = [];
-			
-			for(var i in doc) {
-				if(doc[i].expiry_date < dateToday) {
-					data.push(doc[i].milestoneName);
-				}
-			}
-			
-			if(data.length != 0) {
-				return res.status(200).json({
-					"status": true, 
-					"text": "Returing expired milestones", 
-					"data": data
-				});
-			}
-			
-			else {
-				return res.status(200).json({
-					"status": false, 
-					"text": "No expired milestones", 
-					"data": []
-				});
-			}
-		}
-	});
-});
-
 //9th Oct
 /**
  * @param req.params.userID The user's ID.
@@ -4741,53 +4382,5 @@ app.get("/getUserVotes/:userID/:courseCode",function(req,res,next){
     }
 });
 
-var buzzPass = "Upbuzzforum301";
-var fromSender = "upbuzzforum@gmail.com";
-var sendTO = "networkTest332@gmail.com";
-
-/**
-* @params req.body.userID The person who made the post
-* @params req.body.threadName The name of the thread/topic
-* @params req.body.email Email address of the user receiving 
-* @todo Return a list of expired milestones
-* @return A JSON object will be returned with array of posts. There will be a boolean field to indicate whether or not the operation was successful. A text field will be used to describe what happened in the operation.
-*/
-app.post('/sendMail', function(req, res, next) {
-    console.log('/sendMail');
-
-    nodemailer.createTestAccount((err, account) => {
-        var transporter = nodemailer.createTransport({
-            host: 'smtp.gmail.com', 
-            port: 587, 
-            secure: false, 
-            auth: {
-                user: fromSender, 
-                pass: buzzPass
-            }
-        });
-
-        var mailOptions = {
-            from: fromSender, 
-            to: sendTO, 
-            subject: "Buzz forum notification", 
-            text: "Hello, you're recieving this notification", 
-        };
-
-        transporter.sendMail(mailOptions, (err, info) => {
-            if(err) {
-                console.log(err);
-                return res.status(200).json({
-                    "status": 200, 
-                    "text": err, 
-                    "data": []
-                });
-            }
-
-            console.log("Message sent");
-            transporter.close();
-            return res.status(200).json("Done sending email");
-        });
-    });
-});
 
 app.listen(port, ()=> console.log("Server running at " + port));
