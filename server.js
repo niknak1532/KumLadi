@@ -13,68 +13,68 @@ var connectionToChat = mongoose.createConnection('mongodb://KamoKG:buzzTestPost1
 
 console.log('Initialising model: post');
 var Post_module = new mongoose.Schema({
-    heading: {
-        type: String
-    },
-    viewed:{
-        type:[]
-    },
-    emoji:{
-        type:String,
-        default:null
-    },
-
-    level_number: {
-        type: Number
-    },
-
-    bounty_assigned:{
-        type:Number,
-        default:0
-    },
-
-    child_list: {
-        type: []
-    },
-
-    tag_list: {
-        type: [String]
-    },
-
-    parent_ID: {
-        type: mongoose.Schema.Types.Mixed
-    },
-
-    content: {
-        type: String
-    },
-
-    course_code: {
-        type: String
-    },
-
-    student_number: {
-        type: String
-    },
-
-    timestamp : {
-        type: Date,
-        default: Date.now
-    },
-
-    visibility:{
-        type:Boolean,
-        default: true
-    }
+	heading: {
+		type: String
+	},
+	viewed:{
+		type:[]
+	},
+	emoji:{
+		type:String,
+		default:null
+	},
+	
+	level_number: {
+		type: Number
+	},
+	
+	bounty_assigned:{
+		type:Number,
+		default:0
+	},
+	
+	child_list: {
+		type: []
+	},
+	
+	tag_list: {
+		type: [String]
+	},
+	
+	parent_ID: {
+		type: mongoose.Schema.Types.Mixed
+	},
+	
+	content: {
+		type: String
+	},
+	
+	course_code: {
+		type: String
+	},
+	
+	student_number: {
+		type: String
+	},
+	
+	timestamp : {
+		type: Date,
+		default: Date.now
+	},
+	
+	visibility:{
+		type:Boolean,
+		default: true
+	}
 });
 console.log('Initialising model: vote');
 var VoteSchema=new mongoose.Schema({
     postID:{
         type:mongoose.Schema.Types.Mixed
     },
-    course_code:{
-        type:String
-    },
+	course_code:{
+		type:String
+	},
     upVotes:{
         type:[String]
     },
@@ -275,211 +275,211 @@ var ldapModuleResponse = null;
 //**************************************************8
 
 /**
- * @param req.params.userID The user's ID.
- * @todo All the user's posts and votes made will be counted, for each and every one of their modules.
- */
+* @param req.params.userID The user's ID.
+* @todo All the user's posts and votes made will be counted, for each and every one of their modules. 
+*/
 app.get("/attempt/:userID",function(req,res,next){
-    Users.findOne({userID:req.params.userID},function(err,user){
-        if(err)
-        {
-            console.log("Error: "+err);
-            return res.status(200).json({
-                status:false,
-                text:err
-            });
-        }
-        if(user)
-        {
-            async.parallel([
-                    function(callBack){
-                        var count =0;
-                        var docs=[];
-                        _.forEach(user.modules,function(code){
-                            Posts.find({student_number:req.params.userID,course_code:code},function(err,posts){
-                                if(err)
-                                {
-                                    console.log("Error: "+err);
-                                }
-                                if(posts.length)
-                                {
-                                    docs.push({
-                                        numPosts:posts.length,
-                                        module:code
-                                    });
-                                }
-                                else
-                                {
-                                    docs.push({
-                                        numPosts:0,
-                                        module:code
-                                    })
-                                }
-                                if((++count)==user.modules.length)
-                                {
-                                    callBack(null,docs);
-                                }
-                            });
-                        });
-                    },
-                    function(callBack){
-                        var count =0;
-                        var docs=[];
-                        _.forEach(user.modules,function(code){
-                            Votes.find({course_code:code},function(err,votes){
-                                if(err)
-                                {
-                                    console.log("Error: "+err);
-                                }
-                                if(votes.length)
-                                {
-                                    var num=0;
-                                    for(var i=0;i<votes.length;i++)
-                                    {
-                                        for(var j=0;j<votes[i].upVotes.length;j++)
-                                        {
-                                            if(votes[i].upVotes[j]==req.params.userID)
-                                            {
-                                                num++;
-                                            }
-                                        }
-                                        for(var j=0;j<votes[i].downVotes.length;j++)
-                                        {
-                                            if(votes[i].downVotes[j]==req.params.userID)
-                                            {
-                                                num++;
-                                            }
-                                        }
-                                    }
-                                    console.log("Found votes in "+code+" for user "+req.params.userID);
-                                    docs.push({
-                                        numVotes:num,
-                                        module:code
-                                    });
-                                }
-                                else
-                                {
-                                    console.log("Found no votes in "+code+" for user "+req.params.userID);
-                                    docs.push({
-                                        numVotes:0,
-                                        module:code
-                                    });
-                                }
-                                if((++count)==user.modules.length)
-                                {
-                                    callBack(null,docs);
-                                }
-                            });
-                        });
-                    }
-                ],
-                function(err,results){
-                    if(err)
-                    {
-                        console.log("Error: "+err);
-                        return res.status(200).json({
-                            status:false,
-                            text:err
-                        });
-                    }
-                    return res.status(200).json({
-                        status:true,
-                        text:results
-                    });
-                });
-
-        }
-        else
-        {
-            console.log("User does not exist");
-            return res.status(200).json({
-                status:false,
-                text:"User does not exit"
-            });
-        }
-    });
-
+	Users.findOne({userID:req.params.userID},function(err,user){
+		if(err)
+		{
+			console.log("Error: "+err);
+			return res.status(200).json({
+				status:false,
+				text:err
+			});
+		}
+		if(user)
+		{
+			async.parallel([
+				function(callBack){
+					var count =0;
+					var docs=[];
+					_.forEach(user.modules,function(code){
+						Posts.find({student_number:req.params.userID,course_code:code},function(err,posts){
+							if(err)
+							{
+								console.log("Error: "+err);
+							}
+							if(posts.length)
+							{
+								docs.push({
+									numPosts:posts.length,
+									module:code
+								});
+							}
+							else
+							{
+								docs.push({
+									numPosts:0,
+									module:code
+								})
+							}
+							if((++count)==user.modules.length)
+							{
+								callBack(null,docs);
+							}
+						});
+					});
+				},
+				function(callBack){
+					var count =0;
+					var docs=[];
+					_.forEach(user.modules,function(code){
+						Votes.find({course_code:code},function(err,votes){
+							if(err)
+							{
+								console.log("Error: "+err);
+							}
+							if(votes.length)
+							{
+								var num=0;
+								for(var i=0;i<votes.length;i++)
+								{
+									for(var j=0;j<votes[i].upVotes.length;j++)
+									{
+										if(votes[i].upVotes[j]==req.params.userID)
+										{
+											num++;
+										}
+									}
+									for(var j=0;j<votes[i].downVotes.length;j++)
+									{
+										if(votes[i].downVotes[j]==req.params.userID)
+										{
+											num++;
+										}
+									}
+								}
+								console.log("Found votes in "+code+" for user "+req.params.userID);
+								docs.push({
+									numVotes:num,
+									module:code
+								});
+							}
+							else
+							{
+								console.log("Found no votes in "+code+" for user "+req.params.userID);
+								docs.push({
+									numVotes:0,
+									module:code
+								});
+							}
+							if((++count)==user.modules.length)
+							{
+								callBack(null,docs);
+							}
+						});
+					});
+				}
+			], 
+			function(err,results){
+				if(err)
+				{
+					console.log("Error: "+err);
+					return res.status(200).json({
+						status:false,
+						text:err
+					});
+				}
+				return res.status(200).json({
+					status:true,
+					text:results
+				});
+			});
+			
+		}
+		else
+		{
+			console.log("User does not exist");
+			return res.status(200).json({
+				status:false,
+				text:"User does not exit"
+			});
+		}
+	});
+	
 });
 /**
- * @params req.params.postID The child post's ID.
- * @todo It will find the child post's parent, if it exists.
- */
+* @params req.params.postID The child post's ID.
+* @todo It will find the child post's parent, if it exists.
+*/
 app.get("/getParent/:postID",function(req,res,next){
-    if(req.params.postID)
-    {
-        Posts.findById(req.params.postID,function(err,child){
-            if(err)
-            {
-                console.log("Error: "+err);
-                return res.status(200).json({
-                    status:false,
-                    text:err,
-                    data:{}
-                });
-            }
-            else if(!child)
-            {
-                console.log("Child post does not exist");
-                return res.status(200).json({
-                    status:false,
-                    text:"Child post does not exist",
-                    data:{}
-                });
-            }
-            else if(child.parent_ID==null)
-            {
-                console.log("Child post has no parent");
-                return res.status(200).json({
-                    status:true,
-                    text:"Child post does not exist",
-                    data:{}
-                });
-            }
-            else
-            {
-                Posts.findById(child.parent_ID,function(err,par){
-                    if(err)
-                    {
-                        console.log("Error: "+err);
-                        return res.status(200).json({
-                            status:false,
-                            text:err,
-                            data:{}
-                        });
-                    }
-                    else if(!par)
-                    {
-                        console.log("Parent post does not exist");
-                        return res.status(200).json({
-                            status:false,
-                            text:"Parent post does not exist",
-                            data:{}
-                        });
-                    }
-                    else
-                    {
-                        console.log("Parent post found");
-                        return res.status(200).json({
-                            status:true,
-                            text:"Parent post does not exist",
-                            data:{
-                                postID:par._id,
-                                heading:par.heading
-                            }
-                        });
-                    }
-                });
-            }
-        });
-    }
-    else
-    {
-        console.log("Missing parameters");
-        return res.status(200).json({
-            status:false,
-            text:"Missing parameters",
-            data:{}
-        });
-    }
+	if(req.params.postID)
+	{
+		Posts.findById(req.params.postID,function(err,child){
+			if(err)
+			{
+				console.log("Error: "+err);
+				return res.status(200).json({
+					status:false,
+					text:err,
+					data:{}
+				});
+			}
+			else if(!child)
+			{
+				console.log("Child post does not exist");
+				return res.status(200).json({
+					status:false,
+					text:"Child post does not exist",
+					data:{}
+				});
+			}
+			else if(child.parent_ID==null)
+			{
+				console.log("Child post has no parent");
+				return res.status(200).json({
+					status:true,
+					text:"Child post does not exist",
+					data:{}
+				});
+			}
+			else
+			{
+				Posts.findById(child.parent_ID,function(err,par){
+					if(err)
+					{
+						console.log("Error: "+err);
+						return res.status(200).json({
+							status:false,
+							text:err,
+							data:{}
+						});
+					}
+					else if(!par)
+					{
+						console.log("Parent post does not exist");
+						return res.status(200).json({
+							status:false,
+							text:"Parent post does not exist",
+							data:{}
+						});
+					}
+					else
+					{
+						console.log("Parent post found");
+						return res.status(200).json({
+							status:true,
+							text:"Parent post does not exist",
+							data:{
+								postID:par._id,
+								heading:par.heading
+							}
+						});
+					}
+				});
+			}
+		});
+	}
+	else
+	{
+		console.log("Missing parameters");
+		return res.status(200).json({
+			status:false,
+			text:"Missing parameters",
+			data:{}
+		});
+	}
 });
 
 
@@ -944,7 +944,7 @@ app.get('/getRecentPosts/:course_code',function(req,res,next){
         else
         {
             for(var i in doc){
-                var u=doc[i];
+				var u=doc[i];
                 var pass={
                     postID:u._id,
                     heading:u.heading,
@@ -952,37 +952,38 @@ app.get('/getRecentPosts/:course_code',function(req,res,next){
                     timestamp:u.timestamp
                 };
                 docs.push(pass);
+            }
+        }
+        if(docs.length==0)
+        {
+            console.log("Could not find any documents in the database");
+            return res.status(200).json({
+                "status":true,
+                "data":[],
+                "text":"Could not find any documents in the database"
+            });
+        }
+        else
+        {
+            var result={
+                "status":true,
+                "data":docs,
+                "text":"Could not find any documents in the database"
             };
-}
-if(docs.length==0)
-{
-    console.log("Could not find any documents in the database");
-    return res.status(200).json({
-        "status":true,
-        "data":[],
-        "text":"Could not find any documents in the database"
+            return res.status(200).json(result);
+        }
     });
-}
-else
-{
-    var result={
-        "status":true,
-        "data":docs,
-        "text":"Could not find any documents in the database"
-    };
-    return res.status(200).json(result);
-}
-});
 });
 /**
  * @params req.params.postID The ID of the post.
  * @todo All the child posts of the post will be found and sorted in ascending order according to their timestamps. The documents' IDs and heading will be stored in an array.
  * @return A JSON object will be returned. If successful then the object will contain an array of JSON objects, otherwise there will be an error message.
  */
-app.get('/getChildPosts/:postID',function(req,res,next){
-    if(req.params.postID)
+app.get('/getChildPosts/:postID/:userID',function(req,res,next){
+    if(req.params.postID&&req.params.userID)
     {
-        Posts.find({parent_ID:mongoose.Schema.Types.ObjectId(req.params.postID)},["_id","heading","student_number","timestamp"],{sort:{timestamp:-1}},function(err,post){
+		console.log("PostID: "+mongoose.Types.ObjectId(req.params.postID));
+        Posts.find({parent_ID:mongoose.Types.ObjectId(req.params.postID)},["_id","heading","student_number","timestamp","course_code","parent_ID"],{sort:{timestamp:-1}},function(err,post){
             if(err)
             {
                 console.log('Encountered error: '+err);
@@ -994,25 +995,28 @@ app.get('/getChildPosts/:postID',function(req,res,next){
             }
             else if(post.length)
             {
-                var docs=[];
-                for(var i=0;i<post.length;i++)
-                {
-                    docs.push({
-                        postID:post[i]._id,
-                        userID:post[i].student_number,
-                        timestamp:post[i].timestamp,
-                        viewed:false
-                    });
-                    for(var j in post[i].viewed)
-                    {
-                        if(req.params.userID==post[i].viewed[j])
-                        {
-                            doc[docs.length-1].viewed=true;
-                            break;
-                        }
-                    }
-                }
-                console.log('Children: '+post.child_list);
+				var docs=[];
+				for(var i=0;i<post.length;i++)
+				{
+					docs.push({
+						postID:post[i]._id,
+						userID:post[i].student_number,
+						timestamp:post[i].timestamp,
+						viewed:false,
+						heading:post[i].heading,
+						module:post[i].course_code,
+						parent:post[i].parent_ID
+					});
+					for(var j in post[i].viewed)
+					{
+						if(req.params.userID==post[i].viewed[j])
+						{
+							doc[docs.length-1].viewed=true;
+							break;
+						}
+					}
+				}
+                console.log('Children: '+docs);
                 return res.status(200).json({
                     "status":true,
                     "data":docs,
@@ -1053,21 +1057,21 @@ app.get('/getPosts/:course_code/:userID',function(req,res,next){
             var docs=[];
             if(doc)
             {
-                _.forEach(doc,function(u){
-                    docs.push({
-                        postID:u._id,
-                        heading:u.heading,
-                        viewed:false
-                    });
-                    for(var i in u.viewed)
-                    {
-                        if(req.params.userID==u.viewed[i])
-                        {
-                            docs[docs.length-1].viewed=true;
-                        }
-                    }
-                });
-
+                // _.forEach(doc,function(u){
+                //     docs.push({
+                //         postID:u._id,
+                //         heading:u.heading,
+					// 	viewed:false
+                //     });
+					// for(var i in u.viewed)
+					// {
+					// 	if(req.params.userID==u.viewed[i])
+					// 	{
+					// 		docs[docs.length-1].viewed=true;
+					// 	}
+					// }
+                // });
+				docs.push(doc.length);
             }
             if(err)
             {
@@ -1113,10 +1117,10 @@ app.get('/getPosts/:course_code/:userID',function(req,res,next){
  * @todo This function will fetch all the siblings of the post in question.
  * @return A JSON object will be returned. If successful then every index of the array will contain a JSON object. A boolean field will be there to indicate if the process was successful.
  */
-app.get('/getSiblings/:postID',function(req,res,next){
-    if(req.params.postID)
+app.get('/getSiblings/:postID/:userID',function(req,res,next){
+    if(req.params.postID&&req.params.userID)
     {
-        console.log("/getSiblings");
+    	console.log("/getSiblings");
         Posts.findById(req.params.postID,function(err,child){
             if(err)
             {
@@ -1139,109 +1143,109 @@ app.get('/getSiblings/:postID',function(req,res,next){
             if(child.parent_ID==null)
             {
                 console.log("Post does not have a parent");
-
-                Posts.find({"level_number":0,"course_code":req.params.course_code},['heading','_id','level_number','viewed','timestamp','student_number'],{skip:0,limit:10,sort:{"timestamp":-1}},function(err,doc){
-                    var docs=[];
-                    if(err)
-                    {
-                        console.log("Encountered error while retriving documents");
-                        res.status(200).json({
-                            "status":false,
-                            "data":[],
-                            "text":err
-                        });
-                    }
-                    else if(doc.length)
-                    {
-                        _.forEach(doc,function(u){
-                            docs.push({
-                                heading:u.heading,
-                                postID:u._id,
-                                viewed:false,
-                                userID:u.student_number,
-                                timestamp:u.timestamp
-                            });
-                            for(var i in u.viewed)
-                            {
-                                if(u.viewed[i]==req.params.userID)
-                                {
-                                    docs[docs.length-1].viewed=true;
-                                    break;
-                                }
-                            }
-                        });
-                        if(docs.length==null||docs.length==0)
-                        {
-                            console.log("No posts were found");
-                        }
-                        else
-                        {
-                            console.log("Found all the level-0 posts");
-                        }
-                        res.status(200).json({
-                            "data":docs,
-                            "status":true,
-                            "text":"Found documents"
-                        });
-                    }
-                    else
-                    {
-                        res.status(200).json({
-                            "data":[],
-                            "status":true,
-                            "text":"could not find any documents"
-                        });
-                    }
-                });
+                
+                Posts.find({"level_number":0,"course_code":child.course_code},['heading','_id','level_number','viewed','timestamp','student_number'],{skip:0,limit:10,sort:{"timestamp":-1}},function(err,doc){
+					var docs=[];
+					if(err)
+					{
+						console.log("Encountered error while retriving documents");
+						res.status(200).json({
+							"status":false,
+							"data":[],
+							"text":err
+						});
+					}
+					else if(doc.length)
+					{
+						_.forEach(doc,function(u){
+							docs.push({
+								heading:u.heading,
+								postID:u._id,
+								viewed:false,
+								userID:u.student_number,
+								timestamp:u.timestamp
+							});
+							for(var i in u.viewed)
+							{
+								if(u.viewed[i]==req.params.userID)
+								{
+									docs[docs.length-1].viewed=true;
+									break;
+								}
+							}
+						});
+						if(docs.length==null||docs.length==0)
+						{
+							console.log("No posts were found");
+						}
+						else
+						{
+							console.log("Found all the level-0 posts");
+						}
+						res.status(200).json({
+							"data":docs,
+							"status":true,
+							"text":"Found documents"
+						});
+					}
+					else
+					{
+						res.status(200).json({
+							"data":[],
+							"status":true,
+							"text":"could not find any documents"
+						});
+					}
+				});
             }
             else
             {
-                Posts.find({parent_ID:mongoose.Schema.Types.ObjectId(child.parent_ID)},['heading','_id','level_number','student_number','timestamp'],{skip:0,limit:10,sort:{"timestamp":-1}},function(err,par){
-                    if(err)
-                    {
-                        console.log(err);
-                        return res.status(200).json({
-                            status:false,
-                            text:err,
-                            data:[]
-                        });
-                    }
-                    if(!par.length)
-                    {
-                        console.log("Cannot find parent post");
-                        return res.status(200).json({
-                            status:false,
-                            text:"Cannot find parent post",
-                            data:[]
-                        });
-                    }
-                    var docs=[];
-                    _.forEach(par,function(u){
-                        docs.push({
-                            heading:u.heading,
-                            postID:u._id,
-                            userID:u.student_number,
-                            timestamp:u.timestamp,
-                            viewed:false
-                        });
-                        for(var i in u.viewed)
-                        {
-                            if(u.viewed[i]==req.params.userID)
-                            {
-                                docs[docs.length-1].viewed=true;
-                                break;
-                            }
-                        }
-                    });
-                    console.log("Found siblings");
-                    return res.status(200).json({
-                        status:true,
-                        text:"Found siblings",
-                        data:docs
-                    });
-
-                });
-            }
+	            Posts.find({parent_ID:mongoose.Types.ObjectId(child.parent_ID)},['heading','_id','level_number','student_number','timestamp'],{skip:0,limit:10,sort:{"timestamp":-1}},function(err,par){
+	                if(err)
+	                {
+	                    console.log(err);
+	                    return res.status(200).json({
+	                        status:false,
+	                        text:err,
+	                        data:[]
+	                    });
+	                }
+	                if(!par.length)
+	                {
+	                    console.log("Cannot find parent post");
+	                    return res.status(200).json({
+	                        status:false,
+	                        text:"Cannot find parent post",
+	                        data:[]
+	                    });
+	                }
+	                var docs=[];
+	                _.forEach(par,function(u){
+	                    docs.push({
+	                        heading:u.heading,
+	                        postID:u._id,
+	                        userID:u.student_number,
+	                        timestamp:u.timestamp,
+							viewed:false
+	                    });
+						for(var i in u.viewed)
+						{
+							if(u.viewed[i]==req.params.userID)
+							{
+								docs[docs.length-1].viewed=true;
+								break;
+							}
+						}
+	                });
+	                console.log("Found siblings");
+	                return res.status(200).json({
+	                    status:true,
+	                    text:"Found siblings",
+	                    data:docs
+	                });
+	            
+            	});
+	        }
         });
     }
     else
@@ -1399,46 +1403,46 @@ app.get('/getContent/:postID',function(req,res,next){
             }
             else if(post)
             {
-                var st=true;
+				var st=true;
                 console.log('Found the post');
-                for(var i=0;i<post.viewed.length;i++)
-                {
-                    if(post.viewed[i]==req.body.userID)
-                    {
-                        st=false;
-                        break;
-                    }
-                }
-                if(st==true)
-                {
-                    post.viewed.push(req.body.userID);
-                }
-                post.save(function(err,post){
-                    if(err)
-                    {
-                        console.log("Error: "+err);
-                        return res.status(200).json({
-                            "status":false,
-                            "content":null,
-                            "text":err,
-                            "timestamp":null,
-                            "studentID":null,
-                            "heading":null,
-                            "tag_list":[]
-                        });
-                    }
-                    console.log("Saved");
-                    return res.status(200).json({
-                        "status":true,
-                        "content":post.content,
-                        "text":"Found the post",
-                        "timestamp":post.timestamp.toLocaleString('en-GB'),
-                        "studentID":post.student_number,
-                        "heading":post.heading,
-                        "tag_list":post.tag_list
-                    });
-                });
-
+				for(var i=0;i<post.viewed.length;i++)
+				{
+					if(post.viewed[i]==req.body.userID)
+					{
+						st=false;
+						break;
+					}
+				}
+				if(st==true)
+				{
+					post.viewed.push(req.body.userID);
+				}
+				post.save(function(err,post){
+					if(err)
+					{
+						console.log("Error: "+err);
+						return res.status(200).json({
+							"status":false,
+							"content":null,
+							"text":err,
+							"timestamp":null,
+							"studentID":null,
+							"heading":null,
+							"tag_list":[]
+						});
+					}
+					console.log("Saved");
+					return res.status(200).json({
+						"status":true,
+						"content":post.content,
+						"text":"Found the post",
+						"timestamp":post.timestamp.toLocaleString('en-GB'),
+						"studentID":post.student_number,
+						"heading":post.heading,
+						"tag_list":post.tag_list
+					});
+				});
+                
             }
             else
             {
@@ -2022,22 +2026,32 @@ app.get('/adminModules/:userID', function(req, res, next) {
 app.get('/studentsInModule/:module', function(req, res, next) {
     console.log("/studentsInModule/:module");
 
-    file.getUsersInModule(req.params.module, function(students) {
-        if(students.length == 0) {
-            console.log("No users found in " + req.params.module);
+    Users.find({modules:req.params.module},["userID"],{},function(err,users){
+        if(err)
+        {
+            console.log("Error: ");
             return res.status(200).json({
-                "status": false,
-                "text": "No users found in " + req.params.module,
-                "data": []
+                status:false,
+                text:err,
+                data:[]
             });
         }
-
-        else {
-            console.log("Found users - Returning users");
+        else if(users.length)
+        {
+            console.log("found");
             return res.status(200).json({
-                "status": true,
-                "text": "Found users - Returning users",
-                "data": students
+                status:true,
+                text:"found",
+                data:users
+            });
+        }
+        else
+        {
+            console.log("Nothing found");
+            return res.status(200).json({
+                status:false,
+                text:"Nothingd found",
+                data:[]
             });
         }
     });
@@ -2569,7 +2583,7 @@ app.post('/upVote',function(req,res,next){
                     console.log("Didn't find the vote");
                     var v=new Votes({
                         postID:post._id,
-                        course_code:post.course_code,
+						course_code:post.course_code,
                         upVotes:[req.body.student_number],
                         downVotes:[]
                     });
@@ -2704,7 +2718,7 @@ app.post('/downVote',function(req,res,next){
                     console.log("Didn't find the vote");
                     var v=new Votes({
                         postID:post._id,
-                        course_code:post.course_code,
+						course_code:post.course_code,
                         downVotes:[req.body.student_number],
                         upVotes:[]
                     });
@@ -3417,6 +3431,7 @@ app.get('/getAllGroups', function(req, res, next) {
     });
 });
 
+
 /**
  * @params req.body.groupName The groups's name.
  * @params req.body.peers The array of peers to join the group.
@@ -3446,55 +3461,205 @@ app.patch('/joinGroup', function(req, res, next) {
         }
 
         else {
-            console.log('Adding peers to group');
-            if(req.body.peers != null && req.body.peers.length != 0) {
-                for(var i in req.body.peers) {
-                    doc.peers.push(req.body.peers[i]);
-                }
-
-                doc.save(function(err, obj) {
-                    if(err) {
-                        console.log('An error occured while searching');
-                        return res.status(200).json({
-                            "status": false,
-                            "text": err,
-                            "data": []
-                        });
-                    }
-
-                    else if(!obj) {
-                        console.log('Group does not exist');
-                        return res.status(200).json({
-                            "status": false,
-                            "text": "Group does not exist",
-                            "data": []
-                        });
-                    }
-
-                    else {
-                        console.log(req.body.peers + ' added to group');
-                        return res.status(200).json({
-                            "status":200,
-                            "text": "User added to group",
-                            "GroupName": obj.groupName,
-                            "Initiator": obj.initiator,
-                            "Peers": obj.peers
-                        });
-                    }
+            if(req.body.peers.length == 0) {
+                console.log("No users in request body");
+                return res.status(200).json({
+                    "status": false,
+                    "text": "No users in request body",
+                    "data": []
                 });
             }
 
-            else {
-                console.log("No peers in request body");
-                return res.status(200).json({
-                    status: false,
-                    text: "No peers in request body",
-                    data: []
-                });
+            else if(req.body.peers.length == 1) {
+                var status = false;
+
+                for(var t in doc.peers) {
+                    if(doc.peers[t] == req.body.peers) {
+                        status = true;
+                        break;
+                    }
+                }
+
+
+                if(status == false) {
+                    doc.peers.push(req.body.peers);
+
+                    doc.save(function(err, obj) {
+                        if(err) {
+                            console.log("An error occured while saving");
+                        }
+
+                        else if(obj.length == 0) {
+                            console.log("Could not save document");
+                        }
+
+                        else {
+                            console.log("User added to the group");
+                        }
+                    });
+
+                    Users.findOne({"userID": req.body.peers}, function(err, doc) {
+                        if(err) {
+                            console.log("An error occured while searching for a user");
+                            return res.status(200).json({
+                                "status": false,
+                                "text": "An error occured while searching for a user",
+                                "data": []
+                            });
+                        }
+
+                        else if(doc) {
+                            console.log("No user was found");
+                            return res.status(200).json({
+                                "status": false,
+                                "text": "No user was found",
+                                "data": []
+                            });
+                        }
+
+                        else {
+                            console.log("Adding user to groups joined");
+                            doc.groupsJoinedTo.push(doc.userID);
+
+                            doc.save(function(err, obj) {
+                                if(err) {
+                                    console.log("An error occured while saving");
+                                    return res.status(200).json({
+                                        "status": false,
+                                        "text": "An error occured while saving",
+                                        "data": []
+                                    });
+                                }
+
+                                else if(!obj) {
+                                    console.log("Could not save user");
+                                    return res.status(200).json({
+                                        "status": false,
+                                        "text": "Could not save user",
+                                        "data": []
+                                    });
+                                }
+
+                                else {
+                                    console.log("Saving user");
+                                    return res.status(200).json({
+                                        "status": 200,
+                                        "text": "User saved in db",
+                                        "groupName": req.body.groupName
+                                    })
+                                }
+                            })
+                            return res.status(200).json({
+                                "status": 200,
+                                "text": "Adding user to the group",
+                                "group": doc.groupName,
+                                "peers": doc.peers
+                            });
+                        }
+                    });
+                }
+
+                else if(status == true){
+                    console.log("User already in group");
+                    return res.status(200).json({
+                        "status": false,
+                        "text": "User already in group",
+                        "data": []
+                    });
+                }
+            }
+
+            else { //More than one peer in array passed
+                var status = false;
+
+                for(var r in doc.peers) {
+                    for(var e in req.body.peers) {
+                        if(doc.peers[r] == req.body.peers[e]) {
+                            status = true;
+                            break;
+                        }
+                    }
+
+                    if(status == true)
+                        break;
+                }
+
+
+                if(status == false) {
+                    for(var i in req.body.peers) {
+                        doc.peers.push(req.body.peers[i]);
+                        Users.findOne({"userID": req.body.peers[i]}, function(err, user) {
+                            if(err) {
+                                console.log("An error occured while searching for user");
+                            }
+
+                            else if(user.length == 0) {
+                                console.log("Could nit find user");
+                            }
+
+                            else {
+                                user.groupsJoinedTo.push(req.body.groupName);
+                                console.log("Added user to group");
+
+                                user.save(function(err, doc) {
+                                    if(err) {
+                                        console.log("An error occured while saving");
+                                    }
+
+                                    else if(doc.length == 0) {
+                                        console.log("Document could not be found");
+                                    }
+
+                                    else {
+                                        console.log("User added to group");
+                                    }
+                                })
+                            }
+                        });
+                    }
+
+                    doc.save(function(err, obj) {
+                        if(err) {
+                            console.log("An error occured while saving");
+                            return res.status(200).json({
+                                "status": false,
+                                "text": "An error occured while saving",
+                                "data": []
+                            });
+                        }
+
+                        else if(obj.length == 0) {
+                            console.log("Document could not be saved");
+                            return res.status(200).json({
+                                "status": false,
+                                "text": "Document could not be saved",
+                                "data": []
+                            });
+                        }
+
+                        else {
+                            console.log("Document saved");
+                            return res.status(200).json({
+                                "status": 200,
+                                "text": "Documents saved",
+                                "data": obj
+                            });
+                        }
+                    });
+                }
+
+                else{
+                    console.log("User already in the group");
+                    return res.status(200).json({
+                        "status": false,
+                        "text": "User already in the group",
+                        "data": []
+                    });
+                }
             }
         }
     });
-})
+});
 
 /**
  * @params req.body.groupName The groups's name.

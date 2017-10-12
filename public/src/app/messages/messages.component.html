@@ -9,48 +9,44 @@
   </div>
   <div class="panel-body gradient-pattern" id="x13" style="width: 100%; height: 90%; colour: black" >
     <div *ngIf="mess_Post" style="height: 85%; width: 100%; overflow-y: auto">
-    <h3 style=""><b>{{mess_Post.heading}}</b></h3><br>
-    <p >{{mess_Post.module}} {{mess_Post.content}}</p>
-    <p style="float: right"><i>Posted on {{time_ago(mess_Post.timestamp)}}</i></p>
-    <br><br>
-    <div class="chip2">
+      <h3 style=""><b>{{mess_Post.heading}}</b></h3><br>
+      <p >{{mess_Post.module}} {{mess_Post.content}}</p>
+      <p style="float: right"><i>Posted on {{time_ago(mess_Post.timestamp)}}</i></p>
+      <br><br>
+      <div class="chip2">
 
-      <div > </div></div><br><br>
-  <!--</div>-->
-  <div style="height: 28px; width: 100%;   position: absolute; padding-left: 0px; left: 0px; bottom: 28px; font-size: 20px; color: black">
-    <!--<ngl-pill style="float: left; height: 15px; font-size: 13px">-->
-      <!--<ngl-icon category="standard" icon="feedback" nglPillImage></ngl-icon>-->
-      <!--<a href="javascript:void(0)"><b>#</b>Java</a>-->
-    <!--</ngl-pill>-->
-  </div>
-  <div style="height: 28px; width: 100%; position: absolute; padding-left: 0px; left: 0px; bottom: 0px; font-size: 20px; color: white">
-    <div id="div_likes_contain" style="display: block; float: left; width: 120px; margin-left: 180px; padding-left: 30px;">
-      <p style="float: right; padding-right: 40px; font-size: 16px; color: black; padding-top: 5px">{{upVotes}}</p>
-      <div id="div_likes_icon"style="height: 30px; width: 30px; border-radius: 100%;">
-        <span class="glyphicon glyphicon-thumbs-up" style="font-size: 21px; color: white; float: left; padding-top: 4px" (click)="likePost()"></span>
+        <div > </div></div><br><br>
+      <!--</div>-->
+      <div style="height: 28px; width: 100%;   position: absolute; padding-left: 0px; left: 0px; bottom: 28px; font-size: 20px; color: black">
       </div>
+      <div style="height: 28px; width: 100%; position: absolute; padding-left: 0px; left: 0px; bottom: 0px; font-size: 20px; color: white">
+        <div id="div_likes_contain" style="display: block; float: left; width: 120px; margin-left: 180px; padding-left: 30px;">
+          <p style="float: right; padding-right: 40px; font-size: 16px; color: black; padding-top: 5px">{{upVotes}}</p>
+          <div id="div_likes_icon"style="height: 30px; width: 30px; border-radius: 100%;">
+            <span class="glyphicon glyphicon-thumbs-up" style="font-size: 21px; color: white; float: left; padding-top: 4px" (click)="likePost()"></span>
+          </div>
 
-    </div>
+        </div>
 
 
-    <div id="div_reply_contain" style="display: block; float: left; width: 70px; padding-left: 10px; " >
-      <div id="div_reply_icon"style="height: 30px; width: 30px; border-radius: 100%;" >
-        <span style="margin-top: 4px; margin-left: 4px;" class="glyphicon glyphicon-comment" onclick="document.getElementById('div_main').style.display = 'inline';document.getElementById('txt1').style.display = 'none'; document.getElementById('txt2').style.display = 'inline'; ">
+        <div id="div_reply_contain" style="display: block; float: left; width: 70px; padding-left: 10px; " >
+          <div id="div_reply_icon"style="height: 30px; width: 30px; border-radius: 100%;" >
+        <span style="margin-top: 4px; margin-left: 4px;" class="glyphicon glyphicon-comment" data-toggle="modal" data-target="#myModalHorizontal2">
         </span>
+          </div>
+        </div>
+
+        <div id="div_dislikes_contain" style="display: block; float: left; width: 100px; padding-left: 30px; color: white">
+          <p style="float: right; padding-right: 20px; color: black; font-size: 16px;  padding-top: 5px">{{downVotes}}</p>
+          <div id="div_dislikes_icon"style="height: 30px;  width: 30px; border-radius: 100%;">
+            <span class="glyphicon glyphicon-thumbs-down" style="font-size: 21px; color: white; float: left; padding-top: 4px" (click)="dislikePost()"></span>
+          </div>
+        </div>
+        <div id="div_replyIcon_contain" style="display: block; float: left; width: 100px; padding-left: 300px">
+
+        </div>
       </div>
     </div>
-
-    <div id="div_dislikes_contain" style="display: block; float: left; width: 100px; padding-left: 30px; color: white">
-      <p style="float: right; padding-right: 20px; color: black; font-size: 16px;  padding-top: 5px">{{downVotes}}</p>
-      <div id="div_dislikes_icon"style="height: 30px;  width: 30px; border-radius: 100%;">
-        <span class="glyphicon glyphicon-thumbs-down" style="font-size: 21px; color: white; float: left; padding-top: 4px" (click)="dislikePost()"></span>
-      </div>
-    </div>
-    <div id="div_replyIcon_contain" style="display: block; float: left; width: 100px; padding-left: 300px">
-
-    </div>
-  </div>
-  </div>
   </div>
 </div>
 
@@ -91,7 +87,7 @@
     height: 65px;
     width: 65px;
     border-radius: 100%;
-    background-image: url("http://cs.up.ac.za/users/image/u15110045");
+    background-image: url("../../assets/img_avatar1.png");
     -webkit-background-size: cover;
     -moz-background-size: cover;
     -o-background-size: cover;

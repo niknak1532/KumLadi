@@ -117,6 +117,27 @@ export class KontrollerService {
             .map(data => data.json())
             .toPromise();
     }
+    getUserStatus(x: String){
+        console.log("CALLED GET getUserStatus");
+        var authtoken = localStorage.getItem('auth_token');
+        var headers = new Headers({'Accept':'application/json'});
+        headers.append('Authorization', 'Bearer ${authToken}');
+        var options = new RequestOptions({headers: headers});
+        return this._http.get("/getUserStatus/"+x, options)
+            .map(data => data.json().data)
+            .toPromise();
+    }
+
+    studentsInModule(x: String){
+        console.log("CALLED GET studentsInModule");
+        var authtoken = localStorage.getItem('auth_token');
+        var headers = new Headers({'Accept':'application/json'});
+        headers.append('Authorization', 'Bearer ${authToken}');
+        var options = new RequestOptions({headers: headers});
+        return this._http.get("/studentsInModule/"+x, options)
+            .map(data => data.json().data)
+            .toPromise();
+    }
 
     attempt(x: String){
         console.log("CALLED GET attempt");

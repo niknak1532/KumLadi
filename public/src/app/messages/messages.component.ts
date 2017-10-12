@@ -49,9 +49,9 @@ export class MessagesComponent implements OnInit {
             case 'string':
                 time = +new Date(time);
                 break;
-            case 'object':
-                if (time.constructor === Date) time = time.getTime();
-                break;
+            // case 'object':
+            //     if (time.constructor === Date) time = time.getTime();
+            //     break;
             default:
                 time = +new Date();
         }

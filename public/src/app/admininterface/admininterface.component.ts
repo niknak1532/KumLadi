@@ -8,6 +8,10 @@ import {KontrollerService} from "../kontroller.service";
 })
 export class AdmininterfaceComponent implements OnInit {
     display: boolean = false;
+    private timer;
+    admin_Obj = [];
+    admin_selected_module = "";
+    ad_allUsers = [];
     panel_heading: string = "Mile Stones";
     showDialog() {
         this.display = true;
@@ -30,7 +34,62 @@ export class AdmininterfaceComponent implements OnInit {
     }
 
   ngOnInit() {
+      this.timer = setInterval(() => {
+          this.refresh_myAdmin();
+      }, 6000);
   }
+
+    refresh_myAdmin()
+    {
+        if (this.display == true && sessionStorage.getItem("sessionID"))
+        {
+            this.ad_get_adminModules();
+            // this.rep_gami_stats();
+        }
+        if (!sessionStorage.getItem("sessionID"))
+        {
+            // this.repo_stats = null;
+            this.display = false;
+        }
+    }
+
+    ad_get_adminModules()
+    {
+        this._kontrolService.getUserStatus(sessionStorage.getItem("sessionID"))
+            .then(admin_Obj => {
+                this.admin_Obj = admin_Obj;
+                this.ad_get_users();})
+            .catch(err => console.log(err));
+
+
+    }
+
+    ad_get_users()
+    {
+        if (this.admin_selected_module != "")
+        {
+            this._kontrolService.studentsInModule(this.admin_selected_module)
+                .then(ad_allUsers => {this.ad_allUsers = ad_allUsers; this.reflect_users();})
+                .catch(err => console.log(err));
+        }
+    }
+
+    reflect_users()
+    {
+        if (this.ad_allUsers.length > this.DATA.length)
+        {
+            for (; this.ad_allUsers.length > this.DATA.length;)
+            {
+                this.DATA.push({ rank: 0, number: '0', surname: '0', likes: '0', dislikes: 0, responses: 0, bounty: 0, milestones: 0 });
+            }
+
+            for (let i = 0; i < this.DATA.length; i++)
+            {
+                this.DATA[i].number = this.ad_allUsers[i].userID;
+            }
+        }
+        this.data = this.DATA;
+    }
 
   createMileStone = {milestoneName: "", description: "", reward: 0};
   //STARS

@@ -63,11 +63,11 @@
             <li role="separator" class="divider"></li>
             <li onclick="$('#group_trigger').click()" (click)="timerShift(1)"><a href="#"><span class="glyphicon glyphicon-th-large"></span> My Groups</a></li>
             <li onclick="$('#rep_trigger').click()" (click)="timerShift(2)"><a href="#"><span class="glyphicon glyphicon-education"></span> Profile</a></li>
-            <li onclick="$('#ad_trigger').click()" (click)="timerShift(3)"><a href="#"><span class="glyphicon glyphicon-king"></span> Admin</a></li>
+            <li *ngIf="userObject[0].account_type == 'Lecture' " onclick="$('#ad_trigger').click()" (click)="timerShift(3)"><a href="#"><span class="glyphicon glyphicon-king"></span> Admin</a></li>
             <li><a href="#"></a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#"><span class="glyphicon glyphicon-flag"></span> Forum Help</a></li>
-            <li onclick="$('button').click(function(){$('h1, h2, .panel').toggleClass('blue');});"><a href="#" ><span class="glyphicon glyphicon-cog" ></span> Settings</a></li>
+            <li class="hideme"><a href="#" ><span class="glyphicon glyphicon-flag"></span> Forum Help</a></li>
+            <li class="hideme" onclick="$('button').click(function(){$('h1, h2, .panel').toggleClass('blue');});"><a href="#" ><span class="glyphicon glyphicon-cog" ></span> Settings</a></li>
             <li (click)="logout()"><a href="#"><span class="glyphicon glyphicon-off" aria-hidden="true"></span> Sign-Out</a></li>
           </ul>
         </li>

@@ -24,8 +24,8 @@
           </thead>
           <!--*ngFor="let p of rp_Posts"-->
           <tr *ngFor="let p of sp_Posts" (click)="selectedSibling(p.postID,p.heading, p.level)">
-              <td>{{p.userID}}</td>
               <td>{{p.heading}}</td>
+              <td>{{p.userID}}</td>
               <td>{{time_ago(p.timestamp)}}</td>
           </tr>
           <tr *ngIf="(sp_Posts.length == 0)">

@@ -209,7 +209,7 @@ export class AppComponent {
     x_setSibs(choosenId: string)
     {
         // this.sp_Posts = [];
-        this._mediatorService.getSiblingPosts(choosenId)
+        this._mediatorService.getSiblingPosts(choosenId, sessionStorage.getItem("sessionID"))
         // .then(sp_Posts => {this.sp_Posts = sp_Posts; if (this.sp_Posts.length == 0) this.noChildrenLevelZero(choosenId);})
             .then(sp_Posts => this.sp_Posts = sp_Posts)
             .catch(err => console.log(err));
@@ -254,7 +254,7 @@ export class AppComponent {
 
     setResponses(choosenId: string)
     {
-        this._mediatorService.getChildPosts(choosenId)
+        this._mediatorService.getChildPosts(choosenId, sessionStorage.getItem("sessionID"))
             .then(co_Posts => this.co_Posts = co_Posts)
             .catch(err => console.log(err));
     }
@@ -272,6 +272,8 @@ export class AppComponent {
         this._mediatorService.createResponce(this.idForMe, this.newPost)
             .then(status => {this.setResponses(this.idForMe);})
             .catch(err => console.log(err));
+        this.newHeading = "";
+        this.newContent = "";
 
     }
 
@@ -281,6 +283,8 @@ export class AppComponent {
         this._mediatorService.createThread('xoxoxo', this.newPost)
             .then(status => {this.getAllPosts(this.sm_moduleName);})
             .catch(err => console.log(err));
+        this.newHeading = "";
+        this.newContent = "";
 
     }
 

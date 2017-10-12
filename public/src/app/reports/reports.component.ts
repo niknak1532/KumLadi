@@ -21,6 +21,7 @@ export class ReportsComponent implements OnInit {
     dummy_Adaptor = [];
     userRank = null;
     gami_stats = [];
+    transition_stats = {"modules":[],"dataNumOfPosts":[],"dataNumOfVotes":[]};
     tbl_format = {"modules":[],"dataNumOfPosts":[],"dataNumOfVotes":[]};
     private timer;
     constructor(private _kontrolService: KontrollerService, private _mediatorService: MediatorService) { }
@@ -35,7 +36,7 @@ export class ReportsComponent implements OnInit {
         {
             case 1: this.panel_heading = 'Profile';
                 document.getElementById("rep_profile").style.display = "block";
-                document.getElementById("rep_gami").style.display = "none";
+                document.getElementById("rep_gami2").style.display = "none";
                 document.getElementById("rep_mile").style.display = "none";
                 document.getElementById("rep_stats").style.display = "none";
                 document.getElementById("rep_subs").style.display = "none";
@@ -45,10 +46,10 @@ export class ReportsComponent implements OnInit {
                 document.getElementById("rep_profile").style.display = "none";
                 document.getElementById("rep_mile").style.display = "none";
                 document.getElementById("rep_stats").style.display = "none";
-                document.getElementById("rep_gami").style.display = "none";
+                document.getElementById("rep_gami2").style.display = "none";
                 break;
             case 3: this.panel_heading = 'Gamification';
-                document.getElementById("rep_gami").style.display = "block";
+                document.getElementById("rep_gami2").style.display = "block";
                 document.getElementById("rep_profile").style.display = "none";
                 document.getElementById("rep_mile").style.display = "none";
                 document.getElementById("rep_stats").style.display = "none";
@@ -57,7 +58,7 @@ export class ReportsComponent implements OnInit {
             case 4: this.panel_heading = 'MileStones';
                 document.getElementById("rep_mile").style.display = "block";
                 document.getElementById("rep_profile").style.display = "none";
-                document.getElementById("rep_gami").style.display = "none";
+                document.getElementById("rep_gami2").style.display = "none";
                 document.getElementById("rep_stats").style.display = "none";
                 document.getElementById("rep_subs").style.display = "none";
                 break;
@@ -66,7 +67,7 @@ export class ReportsComponent implements OnInit {
                 document.getElementById("rep_profile").style.display = "none";
                 document.getElementById("rep_subs").style.display = "none";
                 document.getElementById("rep_mile").style.display = "none";
-                document.getElementById("rep_gami").style.display = "none";
+                document.getElementById("rep_gami2").style.display = "none";
                 break;
         }
     }
@@ -140,18 +141,43 @@ export class ReportsComponent implements OnInit {
     {
         if (this.dummy_Adaptor.length == 0)
             return ;
-        this.tbl_format.modules = [];
-        this.tbl_format.dataNumOfPosts = [];
-        this.tbl_format.dataNumOfVotes = [];
+
+        for (let i = 0; 0 < this.tbl_format.modules.length; i++)
+            this.transition_stats.modules.pop();
+        for (let i = 0; 0 < this.tbl_format.dataNumOfPosts.length; i++)
+            this.transition_stats.dataNumOfPosts.pop();
+        for (let i = 0; 0 < this.tbl_format.dataNumOfVotes.length; i++)
+            this.transition_stats.dataNumOfVotes.pop();
+
         for (let i = 0; i < this.dummy_Adaptor[0].length; i++)
         {
-            this.tbl_format.modules.push(this.dummy_Adaptor[0][i].module);
-            this.tbl_format.dataNumOfPosts.push(this.dummy_Adaptor[0][i].numPosts);
-            this.tbl_format.dataNumOfVotes.push(this.dummy_Adaptor[1][i].numVotes);
+            this.transition_stats.modules.push(this.dummy_Adaptor[0][i].module);
+            this.transition_stats.dataNumOfPosts.push(this.dummy_Adaptor[0][i].numPosts);
+            this.transition_stats.dataNumOfVotes.push(this.dummy_Adaptor[1][i].numVotes);
         }
+        this.tbl_format.modules = this.transition_stats.modules;
+        this.tbl_format.dataNumOfPosts = this.transition_stats.dataNumOfPosts;
+        this.tbl_format.dataNumOfVotes = this.transition_stats.dataNumOfVotes;
         // for (let i = 0; i < this.dummy_Adaptor[0].length; i++) {
-        this.data.datasets[0].data =this.tbl_format.dataNumOfPosts;
-        this.data.datasets[1].data =this.tbl_format.dataNumOfVotes;
+        // this.data.datasets[0].data =this.tbl_format.dataNumOfPosts;
+        // this.data.labels =this.tbl_format.modules;
+        // this.data.datasets[1].data =this.tbl_format.dataNumOfVotes;
+
+        this.data = {
+            labels: this.tbl_format.modules,
+            datasets: [
+                {
+                    label: 'Posts',
+                    backgroundColor: '#2FFFF5',
+                    data: this.tbl_format.dataNumOfPosts
+                },
+                {
+                    label: 'Votes',
+                    backgroundColor: '#42A5F5',
+                    data: this.tbl_format.dataNumOfVotes
+                }
+            ]
+        }
         // }
     }
 

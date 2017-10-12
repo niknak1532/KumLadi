@@ -1,7 +1,7 @@
 <p-dialog header="Buzz Admin" [(visible)]="display" modal="modal" width="900" height="600">
   <ul class="nav nav-tabs">
     <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-    <li><a data-toggle="tab" href="#ad_mileStones">MileStones</a></li>
+    <li class="hideme" ><a data-toggle="tab"  href="#ad_mileStones">MileStones</a></li>
     <li><a data-toggle="tab" href="#ad_viewStats">Statistics</a></li>
   </ul>
 
@@ -9,9 +9,35 @@
     <div id="home" class="tab-pane fade in active">
       <h3>HOME</h3>
       <p>Some content.</p>
+      ad_allUsers:
+      {{ ad_allUsers | json }}
+      admin_Obj:
+      {{ admin_Obj | json }}
     </div>
     <div id="ad_mileStones" class="tab-pane fade">
-      <div> Current MileStones: </div>
+      <div> Current MileStones:
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>Gengre</th>
+            <th>Goal</th>
+            <th>Reaward</th>
+            <th>Expiration</th>
+            <th>Completed</th>
+          </tr>
+          </thead>
+          <!--*ngFor="let p of rp_Posts"-->
+          <!--<tr *ngFor="let p of sp_Posts" (click)="selectedSibling(p.postID,p.heading, p.level)">-->
+          <tr *ngFor="" >
+            <td>X</td>
+            <td>X</td>
+            <td>X</td>
+          </tr>
+          <tr *ngIf="">
+            <td>No responses to current message</td>
+          </tr>
+        </table>
+      </div>
       <div class="alert alert-info">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
         Genre: <strong>LIKES!</strong>
@@ -57,10 +83,9 @@
     <div id="ad_viewStats" class="tab-pane fade" >
       <br>
       <label for="sel1">Module: </label>
-      <select class="form-control">
-        <option>COSxxx</option>
-        <option>COS122</option>
-        <option>COS110</option>
+      <select class="form-control" [(ngModel)]="admin_selected_module">
+        <!--<option *ngIf="p1.status == 'lect'">{{p1.courseCode}}</option>-->
+        <option *ngFor="let p1 of admin_Obj" >{{p1.courseCode}}</option>
       </select>
       <br>
       <br>

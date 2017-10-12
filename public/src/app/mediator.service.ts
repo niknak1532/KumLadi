@@ -105,24 +105,24 @@ export class MediatorService {
             .toPromise();
     }
 
-    getChildPosts(x: String){
+    getChildPosts(x: String, p: String){
          console.log("CALLED GET CHILDREN of "+x);
 	 var authtoken = localStorage.getItem('auth_token');
 	 var headers = new Headers({'Accept':'application/json'});
 	 headers.append('Authorization', 'Bearer ${authToken}');
 	 var options = new RequestOptions({headers: headers});
-         return this._http.get("/getChildPosts/"+x, options)
+         return this._http.get("/getChildPosts/"+x+"/"+p, options)
             .map(data => data.json().data)
             .toPromise();
     }
 
-    getSiblingPosts(x: String){
+    getSiblingPosts(x: String, p: String){
          console.log("CALLED GET SIBLINGS of "+x);
 	 var authtoken = localStorage.getItem('auth_token');
 	 var headers = new Headers({'Accept':'application/json'});
 	 headers.append('Authorization', 'Bearer ${authToken}');
 	 var options = new RequestOptions({headers: headers});
-         return this._http.get("/getSiblings/"+x, options)
+         return this._http.get("/getSiblings/"+x+"/"+p, options)
             .map(data => data.json().data)
             .toPromise();
     }

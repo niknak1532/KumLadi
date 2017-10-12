@@ -2,9 +2,9 @@
   <div class="btn-group-vertical" style="width: 300px; height: 500px; border: 1px solid #DDD; display: inline-block" onclick="">
     <a href="#" class="btn btn-info" (click)="getReports(1)">Profile</a>
     <a href="#" class="btn btn-info" (click)="getReports(5)">Statistics</a>
-    <a href="#" class="btn btn-info" (click)="getReports(2)">Subscriptions</a>
+    <a href="#" class="btn btn-info" (click)="getReports(2)" class="hideme">Subscriptions</a>
     <a href="#" class="btn btn-info" (click)="getReports(3)">Gamification</a>
-    <a href="#" class="btn btn-info" (click)="getReports(4)">Milestones</a>
+    <a href="#" class="btn btn-info" (click)="getReports(4)" class="hideme">Milestones</a>
   </div>
   <div class="panel panel-info" style="width: 550px; height: 500px; border: 1px solid black; display: inline-block; position: absolute; right: 10px">
     <div class="panel-heading">
@@ -41,7 +41,7 @@
         </div>
       </div>
 
-        <div id="rep_gami" class="stat_frame" style="display:none " *ngIf="repo_stats && userRank">
+        <div id="rep_gami2" class="stat_frame" style="display:none " *ngIf="repo_stats && userRank">
           <a href="#" class="list-group-item">
             <h4 class="list-group-item-heading">Current Rank: </h4>
             <p class="list-group-item-text">{{userRank.desc}}</p>
@@ -72,13 +72,13 @@
       <div id="rep_subs" style="display:none;" class="stat_frame">
         <h2>No current subscriptions</h2>
       </div>
-      <div id="rep_stats" style="display:none;" class="stat_frame">
-        <p-chart *ngIf="tbl_format.dataNumOfVotes.length > 0" type="bar" [data]="data"></p-chart>
-        {{tbl_format | json}}
-        <hr>
-        {{dummy_Adaptor | json}}
-        <hr>
-        {{data.datasets | json}}
+      <div id="rep_stats" style="display:none;" class="stat_frame" *ngIf="tbl_format.dataNumOfVotes.length > 0">
+        <p-chart  type="bar" [data]="data"></p-chart>
+        <!--{{tbl_format | json}}-->
+        <!--<br>-->
+        <!--{{dummy_Adaptor | json}}-->
+        <!--<br>-->
+        <!--{{data.datasets | json}}-->
       </div>
       <!--</div>-->
     </div>
