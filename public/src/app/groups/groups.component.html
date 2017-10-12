@@ -1,0 +1,107 @@
+<p-dialog header="My Groups" [(visible)]="display" modal="modal" width="900" height="600">
+  <div class="panel panel-default" id="gp_nav_menu">
+    <div class="panel-heading gold" style=" color: black ">
+      <h3 class="panel-title"><b>My Groups</b></h3>
+    </div>
+    <div class="panel-body gradient-block-pattern" style="font-size: 12px; width: 100%; height:420px; color: #333;  overflow-y: scroll">
+      <!--{{groupInfo | json}}-->
+      <!--{{gr_messages | json}}-->
+      <div  *ngFor="let p1 of myGroups">
+        <br>
+        <div class="btn-group" (click)="selectedGroup(p1)" >
+
+          <a href="#" class="btn btn-default">{{p1}}</a>
+          <a href="#" class="btn btn-success dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-plus-sign"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#" onclick="$('#gr_div_addToGroup').show()">Add Member</a></li>
+          </ul>
+          <br>
+        </div>
+        </div>
+        <div *ngIf="myGroups.length == 0">
+          You Have No Current Groups.
+        </div>
+      <hr>
+      <button class="btn btn-info" onclick="$('#gr_div_createGroup').show()" >Create new Group</button>
+    </div>
+  </div>
+  <div>
+    <div class="panel panel-default" id="gp_conversations" style="">
+      <div class="panel-heading gold" style=" color: black ">
+        <h3 class="panel-title"><b>Conversations</b></h3>
+      </div>
+      <div class="panel-body gradient-block-pattern" style=" font-size: 12px; width: 100%; position: relative; height:90%; color: #333; ">
+        <div style="overflow-y: auto; height: 290px; ">
+        <div id="gr_div_createGroup" class="well" style="display: none;">
+          <p>Please note all groups are valid for a maximum period of 7 days and cos 200$</p>
+          <label >Group Name: </label>
+          <input type="text" class="form-control" style="width: 200px" [(ngModel)]="groupNameView" value="{{groupNameView}}">
+          <label >Pay for group: </label>
+          <input type="checkbox" class="form-control" style="width: 40px" [(ngModel)]="confirm_payment" value="confirm_payment">
+          <button id="btn_create_group" class="btn btn-danger" (click)="createGroup()">CREATE</button>
+          <button class="btn btn-danger" onclick="$('#gr_div_createGroup').hide()">CANCEL</button>
+          <hr>
+        </div>
+        <div id="gr_div_addToGroup" class="well" style="display: none">
+          <!--<p>Please note all groups are valid for a maximum period of 7 days and cos 200$</p>-->
+          <label >Add Group Member: </label>
+          <input type="text" class="form-control" style="width: 200px" [(ngModel)]="newMeber" value="{{newMeber}}">
+          <button class="btn btn-danger" (click)="addToGroup()">ADD</button>
+          <button class="btn btn-danger" onclick="$('#gr_div_addToGroup').hide()">CANCEL</button>
+          <hr>
+        </div>
+
+          <div class="media2" id="div_gr_info" style="display: none" *ngIf="groupInfo!=null">
+            <div class="media-body">
+              <p>Creator: {{groupInfo.initiator}} Date Of Expiry: {{groupInfo.expiry_date}}</p>
+              <p>Members: </p>
+              <p style="margin-left: 30px" > <span *ngFor="let member of groupInfo.peers">{{member}} </span> </p>
+            </div>
+            <br>
+          </div>
+          <div class="gradient-text" *ngIf="groupInfo != null" onmouseenter="$('#div_gr_info').show();" onmouseleave="$('#div_gr_info').hide();">
+            {{groupInfo.groupName}}.
+          </div>
+          <div *ngFor="let p1 of gr_messages" >
+            <!--<div class="media" style="" *ngIf="p1.creator != userId">-->
+            <div class="media media_my_mess media-body_friends_mess" style="float: left;margin-botton: 10px;" *ngIf="p1.creator == userId">
+              <div style="float: left; border: 1px solid yellow; width: 70px; height: 70px; background-image: url('../../assets/img_avatar1.png'); background-size: 100% 100%;">
+              </div>
+              <div class="media-body ">
+                <h4 class="media-heading">{{p1.creator}} </h4>
+                <p>{{p1.message}}</p>
+              </div>
+            </div>
+
+        <!-- Right-aligned -->
+            <!--<div class="media" style="float: right" *ngIf="p1.creator == userId" xoxo>-->
+            <div class="media media_responses media-body_my_mess" style="float: right; margin-botton: 10px;" *ngIf="p1.creator != userId">
+              <div class="media-body">
+                <div style="float: right; border: 1px solid yellow; width: 70px; height: 70px; background-image: url('../../assets/img_avatar1.png');">
+                </div>
+                <h4 class="media-heading">{{p1.creator}} </h4>
+                <p>{{p1.message}}</p>
+              </div>
+            </div>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+        </div>
+        </div>
+        <div style="position: absolute; bottom: 0px; background-color: black; border: 2px solid white; padding-left: 0px; left: 0px; width: 100%">
+          <button (click)="gr_create_post(groupInfo._id)" class="btn btn-danger" style="float: right; margin-right:9px;margin-top: 20px ">Send</button>
+          <div class="form-group" style="margin-left: 20px">
+            <label for="comment" style="color: white">Comment:</label>
+            <textarea class="form-control" rows="2" id="comment" style="width: 500px" [(ngModel)]="gr_response" value="{{gr_response}}"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+  <p-growl [(value)]="growlAlert"></p-growl>
+</p-dialog>
+
+
+<button type="text" id="group_trigger" (click)="showDialog()" icon="fa-external-link-square" label="Show" style="display:none">Show</button>

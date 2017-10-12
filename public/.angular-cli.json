@@ -28,7 +28,7 @@
         "../node_modules/bootstrap/dist/css/bootstrap.min.css"
       ],
       "scripts": [".././node_modules/jquery/dist/jquery.min.js",
-        "../node_modules/chartjs/Chart.js",
+        "../node_modules/chartjs/chart.js",
         "../node_modules/clarity-icons/clarity-icons.min.js",
         "../node_modules/@webcomponents/custom-elements/custom-elements.min.js",
         "../node_modules/bootstrap/dist/js/bootstrap.js"],

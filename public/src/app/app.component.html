@@ -1,19 +1,18 @@
 <!--<button style="position: fixed; height: 300px" (click)="dummyData()">PopulateDummies</button>-->
-<app-nav-bar [nb_comp_ids]="nb_comp_ids" [nav_crums]="nav_crums" [userObject]="userObject" (clicked_crumb)="setMessage2($event.postId, $event.heading)" (view_profile)="toProfile()" (logout_emit)="logOut()" (nb_restToDash)="restToDash($event)"></app-nav-bar>
-<app-reports [userObject]="userObject" ></app-reports>
+<app-nav-bar [nb_comp_ids]="nb_comp_ids" [nav_crums]="nav_crums" [userObject]="userObject" (shift_timer)="timer_Shifted($event)" (clicked_crumb)="setMessage2($event.postId, $event.heading, $event.level)" (view_profile)="toProfile()" (logout_emit)="logOut()" (nb_restToDash)="restToDash($event)"></app-nav-bar>
+<app-reports [userObject]="userObject" [sm_moduleName]="sm_moduleName"></app-reports>
+<app-groups [userObject]="userObject"></app-groups>
+<app-admininterface ></app-admininterface>
 <app-login id="id_login" [user_Id]="user_Id" [user_password]="user_password" (refreshedPage)="dashBored()" [responseDialog]="responseDialog" (authenticate_User)="login_Attempt($event.usrId, $event.usrPs)"></app-login>
-<img src="../assets/background.png">
 <!--<div id="id_dashboard">-->
+<!--<p-chart type="line" [data]="data" [options]="options"></p-chart>-->
 <div id="id_dashboard" style="display: none">
-    <app-side-menu [sm_Posts]="sm_Posts" (selectedMenuItem)="setSibs($event.postId, $event.heading)"></app-side-menu>
-    <app-recent-posts [rp_Posts]="rp_Posts" (rp_selectedItem)="setMessage2($event.postId, $event.heading)" (rp_addToNav)="addToNav($event)"></app-recent-posts>
+    <app-side-menu [sm_Posts]="sm_Posts" [sm_moduleName]="sm_moduleName" [userObject]="userObject" (selecetedModule)="switchModules($event)" (selectedMenuItem)="setSibs($event.postId, $event.heading)"></app-side-menu>
+    <app-recent-posts [rp_Posts]="rp_Posts" (rp_selectedItem)="this.nav_crums = [];setMessage2($event.postId, $event.heading, $event.level)" (rp_addToNav)="addToNav($event)"></app-recent-posts>
     <app-messages [mess_Post]="mess_Post" [upVotes]="upVotes" [downVotes]="downVotes" (mess_post_liked)="likedPost()" (mess_post_disliked)="dislikedPost()" (mess_addToNav)="addToNav($event)"></app-messages>
-    <!--<app-status-bar></app-status-bar>-->
-    <app-sibling-posts [sp_Posts]="sp_Posts" (sp_selectedItem)="setMessage($event.postId, $event.heading)" (sp_addToNav)="addToNav($event)"></app-sibling-posts>
-    <app-subs-list (sl_addToNav)="addToNav($event)"></app-subs-list>
-    <app-comments [co_Posts]="co_Posts" (co_selectedItem)="setMessage2($event.postId, $event.heading)" (co_addToNav)="addToNav($event)"></app-comments>
+    <app-sibling-posts [sp_Posts]="sp_Posts" (sp_selectedItem)="setMessage($event.postId, $event.heading, $event.level)" (sp_addToNav)="addToNav($event)"></app-sibling-posts>
+    <app-comments [co_Posts]="co_Posts" (co_selectedItem)="setMessage2($event.postId, $event.heading, $event.level)" (co_addToNav)="addToNav($event)"></app-comments>
 </div>
-<link rel="stylesheet" href="https://unpkg.com/@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-system.min.css">
 
 
 <div ondragover="drag_over(event)" ondrop="drop(event)">
@@ -42,7 +41,7 @@
                 <br>
             </div>
 
-        <div id="txt2" draggable="true" ondragstart="drag_start(event)" style="opacity:1.0; height: 600px;">
+        <div id="txt2" draggable="true" ondragstart="drag_start(event)" style="color: white; opacity:1.0; height: 600px;">
             <div class="div_dance_header" style="opacity:1.0">
                 <button type="button" class="cancel_dance" style="color:black; opacity:1.0" onclick="document.getElementById('div_main').style.display = 'none'">&times;</button>
                 <h3>Reply to Post</h3>
@@ -103,7 +102,16 @@
         margin-top: 30px;
     }
 
-    #txt1, #txt2{
+    #txt1{
+        width:600px;
+        height: 690px;
+        background-color:#777;
+        position:absolute;
+        border-radius: 20px;
+        border: 3px solid green;
+    }
+
+    #txt2{
         width:600px;
         height: 580px;
         background-color:#777;

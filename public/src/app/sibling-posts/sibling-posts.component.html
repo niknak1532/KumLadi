@@ -1,50 +1,41 @@
 <div class="panel panel-default" id="sibb">
-  <div class="panel-heading" style="background: #333; color: white ">
+  <div class="panel-heading gold" style="color: black ; height: 38px">
     <div style="float: right">
-      <button onclick="$('#div_sp_tools').slideToggle();" class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown"><span class="glyphicon glyphicon-th " style="float: right" onclick=""></span>
-      </button>
-        <div id="div_sp_tools" onclick="$('#div_sp_tools').slideToggle();" class="wall" style="position: fixed; background-color: #BBB; border: 1px solid grey; border-radius: 5px; display: none; width: 60px; height: 60px; ">
-            <div class="tools" onclick="$('#x17').toggle();" style="float: right; height: 30px; width: 30px; border: 1px solid darkgrey; border-radius: 5px; ">
-                <span class="glyphicon glyphicon-pushpin" style="float: right" onclick=""></span>
-            </div>
-            <div  class="tools" onclick="$('#sp_searchTool').slideToggle(); $('#sp_heading').slideToggle();" style="height: 30px; width: 30px; border: 1px solid darkgrey; border-radius: 5px; ">
-              <span class="glyphicon glyphicon-search" style="font-size: 20px"></span>
-            </div>
-            <div class="tools" onclick="$('#sibb').animate({top: '-190px', opacity: '0.0'}).hide(1000); $('#div_sp_tools').slideToggle();" (click)="addToNav('sibb')" style="height: 30px; width: 30px; border: 1px solid darkgrey; border-radius: 5px; ">
-              <span class="	glyphicon glyphicon-resize-small" style="font-size: 20px"></span>
-            </div>
-        </div>
+
+        <!--<button onclick="$('#sibb').animate({top: '-190px', opacity: '0.0'}).hide(1000); $('#div_sp_tools').slideToggle();" (click)="addToNav('sibb')"   id="btn_sp_tooltip" class="btn btn-default" type="button" style=" "><span class="glyphicon glyphicon-resize-small" style="top: 4px; left: 6px; position: absolute;" onclick=""></span>-->
+        <!--</button>-->
+        <!--<button onclick="$('#sp_searchTool').slideToggle(); $('#sp_heading').slideToggle();" id="btn_sp_tooltip2" class="btn btn-default" type="button" style=" "><span class="glyphicon glyphicon-search" style="top: 4px; left: 6px; position: absolute;" onclick=""></span>-->
+        <!--</button>-->
     </div>
-      <div class="input-group" id="sp_searchTool" style="display: none; height: 30px">
-
-          <input id="email" type="text" class="form-control" name="email" value="{{search_string}}" [(ngModel)]="search_string" style="height: 30px; width: 200px">
-          <span class= "glyphicon glyphicon-search" style="height: 30px; font-size: 28px" style="float: left"> </span>
+      <div class="input-group" id="sp_searchTool" style="display: none; position: absolute">
+          <input id="email" type="text" class="form-control" name="email" value="{{search_string}}" [(ngModel)]="search_string" style="height: 15px; width: 200px; margin-bottom: 0px; ">
+          <span class= "glyphicon glyphicon-search" style="" style="float: left"> </span>
       </div>
-    <h3 id="sp_heading" class="panel-title">Related - Posts</h3>
-
+      <h3 id="sp_heading" class="panel-title "><b>Related - Posts</b></h3>
   </div>
-  <div class="panel-body" id="x17" style="font-size: 12px; height:86%; overflow-y:scroll; color: #333">
-      <div *ngFor="let p of sp_Posts">
-      <div class="well banana2" *ngIf="(p.heading.indexOf(search_string) != -1)" style="font-size: 15px; width:100%; height: 40px; padding: 0px; margin-bottom: 6px" (click)="selectedSibling(p.postID,p.heading)">{{p.heading}}-<p style="float: right; "><i>{{p.timestamp}}</i></p></div>
-      </div>
+  <div class="panel-body gradient-pattern " id="x17" style="font-size: 12px; height:76%; overflow-y: auto; color: black">
+      <table class="table table-hover">
+          <thead>
+          <tr>
+              <th>Heading</th>
+              <th>Username</th>
+              <th>Time</th>
+          </tr>
+          </thead>
+          <!--*ngFor="let p of rp_Posts"-->
+          <tr *ngFor="let p of sp_Posts" (click)="selectedSibling(p.postID,p.heading, p.level)">
+              <td>{{p.userID}}</td>
+              <td>{{p.heading}}</td>
+              <td>{{time_ago(p.timestamp)}}</td>
+          </tr>
+          <tr *ngIf="(sp_Posts.length == 0)">
+              <td>No responses to current message</td>
+          </tr>
+      </table>
   </div>
 </div>
 
 <style>
 
-    .banana2:hover{
-        background: greenyellow;
-        cursor:pointer;
-    }
 
-    .glyphicon-th:hover{
-        color: lawngreen;
-    }
-
-    .tools:hover{
-        color: white;
-        background-color: black;
-        background: black;
-        cursor:pointer;
-    }
 </style>

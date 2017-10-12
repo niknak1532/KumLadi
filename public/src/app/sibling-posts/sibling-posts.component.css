@@ -1,0 +1,90 @@
+#div_sp_tools {
+    position: absolute;
+    background-color: #BBB;
+    border: 1px solid grey;
+    border-radius: 5px;
+    display: none;
+    width: 60px;
+    height: 60px;
+    top: 32px;
+    right: 20px;
+}
+
+#btn_sp_tooltip {
+    top: 6px;
+    left: 90%;
+    position: absolute;
+    height: 25px;
+}
+
+
+#btn_sp_tooltip2 {
+    top: 6px;
+    left: 80%;
+    position: absolute;
+    height: 25px;
+}
+
+.banana2:hover{
+    background: greenyellow;
+    cursor:pointer;
+}
+
+.glyphicon-th:hover{
+    color: lawngreen;
+}
+
+.tools:hover{
+    color: white;
+    background-color: black;
+    background: black;
+    cursor:pointer;
+}
+
+.gold{
+    background-image: linear-gradient(#6d94bf, #446e9b 50%, #3e648d);
+}
+
+.gold:before{
+    background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(255,255,255,1) 56%,rgba(252,235,0,1) 96%);
+    border: 1px solid rgba(242,215,12,1);
+}
+
+
+.gold:after{
+    background: linear-gradient(45deg,  rgba(242,215,12,1) 0%,rgba(255,255,255,1) 56%,rgba(252,235,0,1) 96%);
+    border-top: 1px solid rgba(255,255,255,0.3);
+    border-left: 1px solid rgba(255,255,255,0.3);
+    border-bottom: 1px solid rgba(242,215,12,0.3);
+    border-right: 1px solid rgba(242,215,12,0.3);
+    box-shadow: inset 0px 0px 2px 2px rgba(150, 150, 150, .05);
+}
+
+.gold:hover:after{
+    background: linear-gradient(45deg,  rgba(242,215,12,1) 3%,rgba(255,255,255,1) 39%,rgba(252,235,0,1) 100%);
+    border-top: 1px solid rgba(255,255,255,0.3);
+    border-left: 1px solid rgba(255,255,255,0.3);
+    border-bottom: 1px solid rgba(242,215,12,0.3);
+    border-right: 1px solid rgba(242,215,12,0.3);
+    box-shadow: inset 0px 0px 2px 2px rgba(150, 150, 150, .05);
+}
+
+.gradient-pattern {
+    /*background-image: url("../../assets/marble.jpg");*/
+}
+
+.gradient-text {
+    display: inline-block;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    border: none;
+    font: normal 20px/1 "Aladin", Helvetica, sans-serif;
+    color: rgba(48,48,48,1);
+    text-align: center;
+    text-transform: normal;
+    -o-text-overflow: clip;
+    text-overflow: clip;
+    white-space: pre;
+    text-shadow: 1px 1px 0 rgba(140,140,140,0.6) , -1px -1px 1px rgba(0,0,0,0.67) ;
+}

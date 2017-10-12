@@ -4,6 +4,7 @@ import { HttpModule } from '@angular/http';
 import { NgModule } from '@angular/core';
 
 import { MediatorService } from './mediator.service';
+import { KontrollerService } from './kontroller.service';
 
 import { AppComponent } from './app.component';
 import { ChatComponent } from './chat/chat.component';
@@ -38,11 +39,15 @@ import {GrowlModule} from 'primeng/primeng';
 import { ReportsComponent } from './reports/reports.component';
 
 import {PanelModule} from 'primeng/primeng';
-import {ChartModule} from 'primeng/primeng';
+// import {ChartModule} from 'primeng/primeng';
 import {DataListModule} from 'primeng/primeng';
 import { ClarityModule } from "clarity-angular";
+import {ChartModule} from 'primeng/primeng';
 // import {Wizard} from "clarity-angular";
 import {BreadcrumbModule} from 'primeng/primeng';
+import { GroupsComponent } from './groups/groups.component';
+import { AdmininterfaceComponent } from './admininterface/admininterface.component';
+import {INglDatatableSort, INglDatatableRowClick} from 'ng-lightning/ng-lightning';
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,6 +66,8 @@ import {BreadcrumbModule} from 'primeng/primeng';
     DashboardComponent,
       LoginComponent,
       ReportsComponent,
+      GroupsComponent,
+      AdmininterfaceComponent,
     // Messages2Component,
   ],
   imports: [
@@ -83,9 +90,11 @@ import {BreadcrumbModule} from 'primeng/primeng';
       DataListModule,
       ClarityModule,
       BreadcrumbModule,
+      ChartModule,
   ],
   providers: [
       MediatorService,
+      KontrollerService,
   ],
   bootstrap: [
     AppComponent,

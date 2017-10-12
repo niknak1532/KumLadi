@@ -1,5 +1,9 @@
 import { Component, OnInit,Input , EventEmitter, Output } from '@angular/core';
 import {PasswordModule} from 'primeng/primeng';
+
+// import '/public/src/app/login/particle_effect.js';
+// declare var myExtObject: any;
+// declare var webGlObject: any;
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -11,16 +15,21 @@ export class LoginComponent implements OnInit {
     @Input() responseDialog;
     @Output() authenticate_User = new EventEmitter();
     @Output() refreshedPage = new EventEmitter();
+
+    login_id = "";
     constructor() { }
 
   ngOnInit() {
       this.refreshedPage.emit();
+      // myExtObject.func1();
   }
 
     loginAttempt()
     {
         console.log("login.compo.ts: "+this.user_Id);
-        this.authenticate_User.emit({usrId: this.user_Id, usrPs: this.user_password});
+        this.login_id = (<HTMLInputElement>document.getElementById("float-input")).value;
+        this.user_password = (<HTMLInputElement>document.getElementById("float-input2")).value;
+        this.authenticate_User.emit({usrId: this.login_id, usrPs: this.user_password});
     }
 
 

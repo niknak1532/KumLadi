@@ -1,57 +1,44 @@
 <div class="panel panel-default" id="recent">
-  <div class="panel-heading" style="background: #333; color: white ">
+  <div class="panel-heading gold" style="height: 38px">
     <div style="float: right">
-      <button onclick="$('#div_rp_tools').slideToggle();" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="glyphicon glyphicon-th " style="float: right" onclick=""></span>
-      </button>
-      <div id="div_rp_tools" onclick="$('#div_rp_tools').slideToggle();" class="wall" style="position: absolute; background-color: #BBB; border: 1px solid grey; border-radius: 5px; display: none; width: 60px; height: 60px; ">
-        <div class="tools" onclick="$('#x11').toggle();" style="float: right; height: 30px; width: 30px; border: 1px solid darkgrey; border-radius: 5px; ">
-          <span class="glyphicon glyphicon-pushpin" style="float: right" onclick=""></span>
-        </div>
-        <div  class="tools" onclick="$('#rp_searchTool').slideToggle(); $('#rp_heading').slideToggle();" style="height: 30px; width: 30px; border: 1px solid darkgrey; border-radius: 5px; ">
-          <span class="glyphicon glyphicon-search" style="font-size: 20px"></span>
-        </div>
-        <div class="tools" onclick="$('#recent').animate({top: '-150px', opacity: '0.0'}).hide(1000); " (click)="addToNav('recent')" style="height: 30px; width: 30px; border: 1px solid darkgrey; border-radius: 5px; ">
-          <span class="	glyphicon glyphicon-resize-small" style="font-size: 20px"></span>
-        </div>
 
-      </div>
+      <!--<button onclick="$('#recent').animate({top: '-150px', opacity: '0.0'}).hide(1000); " (click)="addToNav('recent')"  id="btn_rec_tooltip" class="btn btn-default" type="button" style=" "><span class="glyphicon glyphicon-resize-small" style="top: 4px; left: 6px; position: absolute;" onclick=""></span>-->
+      <!--</button>-->
+      <!--<button onclick="$('#rp_searchTool').slideToggle(); $('#rp_heading').slideToggle();" id="btn_rec_tooltip2" class="btn btn-default" type="button" style=" "><span class="glyphicon glyphicon-search" style="top: 4px; left: 6px; position: absolute;" onclick=""></span>-->
+      <!--</button>-->
+
     </div>
-    <div class="input-group" id="rp_searchTool" style="display: none; height: 30px">
+    <div class="input-group" id="rp_searchTool" style="display: none; position: absolute">
 
-      <input id="email" type="text" class="form-control" name="email" value="{{search_string}}" [(ngModel)]="search_string" style="height: 30px; width: 200px">
+      <input id="email" type="text" class="form-control" name="email" value="{{search_string}}" [(ngModel)]="search_string" style="height: 20px; width: 200px">
       <span class= "glyphicon glyphicon-search" style="height: 30px; font-size: 28px" style="float: left"> </span>
     </div>
-    <h3 id="rp_heading" class="panel-title">Recent Posts</h3>
+    <h3 id="rp_heading" class="panel-title"><b>Recent Posts</b></h3>
   </div>
-  <div class="panel-body" id="x11" style="font-size: 12px; width: 100%; height: 88%; overflow-y: scroll; resize: both;">
-    <div *ngFor="let p of rp_Posts">
-      <div class="well banana2"  *ngIf="(p.heading.indexOf(search_string) != -1)" style="font-size: 15px; width:100%; height: 40px; padding: 0px; margin-bottom: 6px" (click)="selectedSibling(p.postID, p.heading)">
-        {{p.heading}}
-      </div>
-    </div>
-
-    <div *ngIf="(rp_Posts.length == 0)">
-      No responses to current message
-    </div>
+  <div class="panel-body gradient-pattern" id="x11" style="font-size: 12px; width: 100%; height: 88%; overflow-y: scroll; resize: both;">
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th>Heading</th>
+        <th>Username</th>
+        <th>Time</th>
+      </tr>
+      </thead>
+      <!--*ngFor="let p of rp_Posts"-->
+      <tr *ngFor="let p of rp_Posts" (click)="selectedSibling(p.postID, p.heading, p.level)">
+          <td>{{p.heading}}</td>
+          <td>{{p.userID}}</td>
+          <td>{{time_ago(p.timestamp)}}</td>
+      </tr>
+      <tr *ngIf="(rp_Posts.length == 0)">
+        <td>No responses to current message</td>
+      </tr>
+    </table>
   </div>
 </div>
 <style>
 
-  .banana2:hover{
-    background: greenyellow;
-    cursor:pointer;
-  }
 
-  .glyphicon-th:hover{
-    color: lawngreen;
-  }
-
-  .tools:hover{
-    color: white;
-    background-color: black;
-    background: black;
-    cursor:pointer;
-  }
 </style>
 <style>
   .banana2:hover{

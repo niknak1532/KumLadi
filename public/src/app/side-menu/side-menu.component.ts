@@ -14,13 +14,15 @@ import {Post} from "../post";
 export class SideMenuComponent implements OnInit {
     // @Input() postOffice;
     @Input() sm_Posts;
-
+    @Input() userObject;
+    @Input() sm_moduleName;
     @Output() selectedMenuItem = new EventEmitter();
     @Output() loadedFirst = new EventEmitter();
+    @Output() selecetedModule = new EventEmitter();
 
     constructor(private _mediatorService: MediatorService) { }
 
-    sm_moduleName: string = 'COS101';
+    // sm_moduleName: string = 'COS101';
     sm_parentID: string ;
     sm_content: string = 'A';
     sm_heading: string = 'A';
@@ -47,5 +49,11 @@ export class SideMenuComponent implements OnInit {
     selectedItem(choosenId: string, heading: string)
     {
         this.selectedMenuItem.emit({postId: choosenId, heading: heading});
+    }
+
+    sm_seleceted_newModule(p: string)
+    {
+        this.sm_moduleName = p;
+        this.selecetedModule.emit(p);
     }
 }

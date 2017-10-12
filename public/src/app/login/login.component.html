@@ -1,121 +1,24 @@
-<!--<link rel="stylesheet" href="../../../node_modules/clarity-ui/clarity-ui.min.css">-->
-<!--<link rel="stylesheet" href="../../../node_modules/clarity-ui/clarity-ui.min.css">-->
-<div id="log_containment">
-    <div style="width: 300px;">
-        <br>
-        <br>
-        <div>
-            <button style="float: left; width: 40px; height: 40px;">
-                <span style=" color: black; "><i class="glyphicon glyphicon-user"></i>
-                </span>
-            </button>
-            <div class="ui-float-label" style="float: left; width: 150px; ">
-                <input id="float-input" type="text" size="40" style="height: 40px" value="{{user_Id}}" [(ngModel)]="user_Id" pInputText>
-                <label for="float-input">Username: </label>
-            </div>
-        </div>
-        <br>
-        <br>
-        <br>
-        <br>
-        <div>
-            <button style="float: left; width: 40px; height: 40px; ">
-                <span style=" color: black; "><i class="glyphicon glyphicon-lock"></i>
-                </span>
-            </button>
-            <div class="ui-float-label" style="float: left; width: 150px; ">
-                <input id="float-input2" type="password" size="40" style="height: 40px" value="{{user_password}}" [(ngModel)]="user_password" pInputText>
-                <label for="float-input2">Password: </label>
-            </div>
-        </div>
-
-        <br>
-        <br>
-        <br>
-        <button type="button" class="btn btn-default" (click)="loginAttempt()">Login</button>
-        <p-growl [(value)]="responseDialog"></p-growl>
-    </div>
-    <br>
-    <div class="wrap">
-        <div class="cube">
-            <div class="front"><img src="../../assets/kumladi_black.png" height="200px" width="200px"> </div>
-            <div class="back"><img src="../../assets/kumladi_black.png" height="200px" width="200px"></div>
-            <!--<div class="top"><img src="../../assets/kumladi_white.png" height="200px" width="200px"></div>-->
-            <!--<div class="bottom"><img src="../../assets/kumladi_white.png" height="200px" width="200px"></div>-->
-            <div class="left"><img src="../../assets/kumladi_white.png" height="200px" width="200px"></div>
-             <div class="right"><img src="../../assets/kumladi_white.png" height="200px" width="200px"></div>
+<form id="log_containment">
+    <img  src="../../assets/kumladi_glow.png" height="100" width="160">
+    <div class="form-group">
+        <div class="ui-float-label" style=" width: 150px; ">
+            <!--<button style="float: left; width: 40px; height: 40px; ">-->
+                <!--<span style=" color: black; "><i class="glyphicon glyphicon-lock"></i>-->
+                <!--</span>-->
+            <!--</button>-->
+            <!--<input id="float-input" type="text" size="40" style="height: 40px" value="{{login_id}}" [(ngModel)]="login_id" pInputText required>-->
+            <input id="float-input" type="text" size="40" style="height: 40px" value="{{login_id}}" pInputText required>
+            <label for="float-input">Username: </label>
         </div>
     </div>
-</div>
-<style>
-    .wrap {
-        perspective: 800px;
-        perspective-origin: 0% -150px;
-        /*right: 0px;*/
+<br>
+    <div class="form-group">
+        <div class="ui-float-label" style="width: 150px; ">
+            <input id="float-input2" type="password" size="40" style="height: 40px" value="{{user_password}}" pInputText>
+            <label for="float-input2">Password: </label>
+        </div>
+    </div>
 
-
-    }
-
-    .top{
-        perspective-origin: 100% -150px;
-    }
-    .cube {
-        position: relative;
-        width: 200px;
-        transform-style: preserve-3d;
-        margin-left: 100px;
-    }
-
-    .cube div {
-        position: absolute;
-        width: 200px;
-        height: 140px;
-    }
-
-    .back {
-        transform: translateZ(-100px) rotateY(180deg);
-    }
-    .right {
-        transform: rotateY(-270deg) translateX(100px);
-        transform-origin: top right;
-    }
-    .left {
-        transform: rotateY(270deg) translateX(-100px);
-        transform-origin: center left;
-    }
-    .top {
-        transform: rotateX(-90deg) translateY(-100px);
-        transform-origin: top center;
-    }
-    .bottom {
-        transform: rotateX(90deg) translateY(100px);
-        transform-origin: bottom center;
-    }
-    .front {
-        transform: translateZ(100px);
-    }
-
-    @keyframes spin {
-        from { transform: rotateY(0); }
-        to { transform: rotateY(360deg); }
-    }
-
-    .cube {
-        animation: spin 5s infinite linear;
-    }
-</style>
-<!--<input pPassword type="password"/>-->
-
-<!--<p-dialog header="Godfather I"  modal="modal" width="300" [responsive]="true">-->
-    <!--<p>The story begins as Don Vito Corleone, the head of a New York Mafia family, oversees his daughter's wedding.-->
-        <!--His beloved son Michael has just come home from the war, but does not intend to become part of his father's business.-->
-        <!--Through Michael's life the nature of the family business becomes clear. The business of the family is just like the head of the family,-->
-        <!--kind and benevolent to those who give respect,-->
-        <!--but given to ruthless violence whenever anything stands against the good of the family.</p>-->
-    <!--<p-footer>-->
-        <!--<button type="button" pButton icon="fa-check" (click)="display=false" label="Yes"></button>-->
-        <!--<button type="button" pButton icon="fa-close" (click)="display=false" label="No"></button>-->
-    <!--</p-footer>-->
-<!--</p-dialog>-->
-
-<!--<button type="button" (click)="display = true" pButton icon="fa-external-link-square" label="Show"></button>-->
+    <button type="submit" (click)="loginAttempt()" class="btn btn-success">Login</button>
+    <p-growl [(value)]="responseDialog"></p-growl>
+</form>

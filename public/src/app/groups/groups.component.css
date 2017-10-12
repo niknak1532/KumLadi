@@ -1,0 +1,97 @@
+#gp_nav_menu
+{
+    width: 33%;
+    height: 85%;
+    border-radius: 0%;
+    top: 50px;
+}
+
+#gp_conversations
+{
+    width: 66%;
+    height:460px;
+    position: absolute;
+    border-radius: 0%;
+    top: 13.5px;
+    left: 33%;
+    font-size: 150%;
+}
+
+.gradient-block-pattern {
+
+}
+
+.media_my_mess{
+    background-color: rgba(0,0,255,0.1);
+    width: 80%;
+    border-radius: 20px;
+    border: 1px solid #888;
+}
+
+.media_responses{
+    background-color: rgba(100,1,120,0.2);
+    width: 80%;
+    border-radius: 20px;
+    border: 1px solid mediumpurple;
+}
+
+.media2{
+    background-color: rgba(100,222,90,0.8);
+    width: 200px;
+    position: absolute;
+    border: 3px solid wheat;
+    border-radius: 0px;
+    border: 1px solid #888;
+    left: 230px;
+}
+
+.media-body p{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.media-body_friends_mess h4{
+    padding-right: 10px;
+    background-color: deepskyblue;
+    border: 1px solid deepskyblue;
+    width: 90%;
+    padding-left: 10px;
+}
+
+.media-body_my_mess h4{
+    padding-right: 10px;
+    background-color: mediumpurple;
+    border: 1px solid mediumpurple;
+    width: 90%;
+    padding-left: 10px;
+}
+.media-right{
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.media-body div{
+    background-image: url("../../assets/img_avatar1.png");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.gradient-text {
+    display: inline-block;
+    -webkit-box-sizing: content-box;
+    -moz-box-sizing: content-box;
+    box-sizing: content-box;
+    border: none;
+    font: normal 30px/1 "Aladin", Helvetica, sans-serif;
+    color: rgba(48,48,48,1);
+    text-align: center;
+    text-transform: normal;
+    -o-text-overflow: clip;
+    text-overflow: clip;
+    white-space: pre;
+    text-shadow: 1px 1px 0 rgba(140,140,140,0.6) , -1px -1px 1px rgba(0,0,0,0.67) ;
+}

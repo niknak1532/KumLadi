@@ -11,38 +11,49 @@
   <!--<link rel="stylesheet" href="../node_modules/clarity-icons/clarity-icons.min.css">-->
   <!--<script src="../node_modules/@webcomponents/custom-elements/custom-elements.min.js"></script>-->
   <!--<script src="../node_modules/clarity-icons/clarity-icons.min.js"></script>-->
+  <link async href="http://fonts.googleapis.com/css?family=Aladin" data-generated="http://enjoycss.com" rel="stylesheet" type="text/css"/>
+
+  <script src="assets/particle_scripts/three.js"></script>
+  <script src="assets/particle_scripts/Projector.js"></script>
+  <script src="assets/particle_scripts/CanvasRenderer.js"></script>
+  <script src="assets/particle_scripts/stats.min.js"></script>
+  <script src="assets/particle_scripts/tween.min.js"></script>
+
+  <script>
+      $(document).ready(function(){
+          $('[data-toggle="popover"]').popover();
+      });
+  </script>
 <script>
     function doThaThings() {
         var ctx = document.getElementById("my_canvas");
         var myChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-                datasets: [{
-                    label: '# of Votes',
-                    data: [12, 19, 3, 5, 2, 3],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255,99,132,1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
+                labels: ["22 August", "27 August", "3 September", "13 September"],
+                datasets: [
+                    {
+                        label: "Likes",
+                        backgroundColor: "#8d9",
+                        data: [133,221,783,478]
+                    }, {
+                        label: "Dislikes",
+                        backgroundColor: "#ffeebb",
+                        data: [408,547,675,734]
+                    },
+                    {
+                        label: "Replies",
+                        backgroundColor: "#aaa",
+                        data: [408,547,675,734]
+                    }
+                ]
             },
             options: {
                 scales: {
                     yAxes: [{
+                        scaleLabel:
+                            {display: true,
+                            labelString: "Amount"},
                         ticks: {
                             beginAtZero: true
                         }
@@ -181,28 +192,6 @@
       var Bottom_val = 1;
       function changeAttire(x)
       {
-//          alert('Called switch');
-          switch(x)
-          {
-              case 'H' :
-                  ++Hair_val;
-                  if (Hair_val > 2)
-                      Hair_val = 1;
-                  currentOutFit = document.getElementById("img_avatar").src = "assets/H"+Hair_val+"U"+Upper_val+"B"+Bottom_val+".png";
-                  break;
-              case 'U' :
-                  ++Upper_val;
-                  if (Upper_val > 3)
-                      Upper_val = 1;
-                  currentOutFit = document.getElementById("img_avatar").src = "assets/H"+Hair_val+"U"+Upper_val+"B"+Bottom_val+".png";
-                  break;
-              case 'B' :
-                  ++Bottom_val;
-                  if (Bottom_val > 2)
-                      Bottom_val = 1;
-                  currentOutFit = document.getElementById("img_avatar").src = "assets/H"+Hair_val+"U"+Upper_val+"B"+Bottom_val+".png";
-                  break;
-          }
       }
   </script>
   <link rel="stylesheet" href="https://unpkg.com/@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-system.min.css">
@@ -236,6 +225,6 @@
 </html>
 <style>
   body {
-    background-image: url("assets/background.png");
+    /*background-image: url("assets/background.png");*/
   }
 </style>

@@ -34,6 +34,8 @@ export class MediatorService {
             .toPromise();
     }
 
+
+
     upVote(x: string, p){
          console.log("CALLED UPVOTE ");
 	 var authtoken = localStorage.getItem('auth_token');
@@ -68,6 +70,8 @@ export class MediatorService {
             .map(data => data.json().data)
             .toPromise();
     }
+
+
 
     getUpVotes(x: String){
          console.log("CALLED GET-UP-VOTES");
@@ -124,7 +128,7 @@ export class MediatorService {
     }
 
     getRecentPosts(x: String){
-         console.log("CALLED GET CHILDREN of "+x);
+         console.log("CALLED GET RECENT POSTS "+x);
 	 var authtoken = localStorage.getItem('auth_token');
 	 var headers = new Headers({'Accept':'application/json'});
 	 headers.append('Authorization', 'Bearer ${authToken}');

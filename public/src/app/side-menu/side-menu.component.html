@@ -1,47 +1,32 @@
 <div class="panel panel-default" id="side">
-  <div class="panel-heading" style="background: #333; color: white ">
-    <div class="dropdown" style="float: right; display:none">
-      <button class="btn btn-default dropdown-toggle" style="float: right; margin-bottom: 10px" type="button" data-toggle="dropdown">{{sm_moduleName}}
+  <div class="panel-heading gold" style=" color: black ">
+    <div class="dropdown" style=" margin-right: 60px; position: absolute; right: 50px; top: 0px">
+      <button id="btn_sm_courses" class="btn btn-default dropdown-toggle" style="float: right; color: white; " type="button" data-toggle="dropdown">{{sm_moduleName}}
         <span class="caret"></span></button>
-      <ul class="dropdown-menu">
+      <ul class="dropdown-menu" *ngIf="userObject.length > 0" style="margin-top: 30px">
         <li class="dropdown-header">Your Modules</li>
-        <li><a href="#">{{sm_moduleName}}</a></li>
+        <li *ngFor="let p of userObject[0].modules" (click)="sm_seleceted_newModule(p)"><a href="#">{{p}}</a></li>
       </ul>
     </div>
-    <h3 class="panel-title">Menu</h3>
+    <h3 class="panel-title"><b>Menu</b></h3>
   </div>
-  <div class="panel-body" style="font-size: 12px; width:260px; height:90%; overflow-y:scroll; color: #333">
-    <div id="div_newThread" style="display: none">
-      Module: <input type="text" value="{{sm_moduleName}}" disabled>
-      P_ID: <input type="text" value="{{sm_parentID}}" disabled><br>
-      Heading :<input type="text" placeholder="heading" [(ngModel)]="sm_heading">
-      Content :<input type="text" placeholder="content" [(ngModel)]="sm_content">
-      <br>
-      <p>{{sm_heading}}</p>
-      <br>
-      <p>{{sm_content}}</p>
-      <br>
-      <button (click)="sm_createThread()" onclick="document.getElementById('div_newThread').style.display = 'none' "> Create Thread</button>
 
-    </div>
-
-
+  <div class="panel-body" style="font-size: 12px; width:200px; height:90%; color: #333">
+    <div style=" height:80%; overflow-y:auto; width: 200px">
       <div  *ngFor="let p1 of sm_Posts" style="padding-left: +0px"  >
           <div >
-            <button onclick="$(this).parent().children().toggle(); $(this).show()" type="button" class="btn btn-default" style=" margin-top: 15px; width: 90%" (click)=" selectedItem(p1.postID,p1.heading)">{{p1.heading}}</button>
-
-          <!--<button nglButton="neutral"  onclick="document.getElementById('div_newThread').style.display = 'inline' " style="display: none" (click)="sm_moduleName = p1.course_code; sm_parentID = p1._id">Create New Thread</button>-->
+            <button onclick="$(this).parent().children().toggle(); $(this).show()" type="button" class="btn btn-default" style="height:30px; margin-top: 9px; width: 90%" (click)=" selectedItem(p1.postID,p1.heading)">{{p1.heading}}</button>
           </div>
       </div>
-    <!--</div>-->
     <div>
-      <!--<md-button class="md-raised md-primary">Primary</md-button>-->
-      <!--<mui-button>CLick Me</mui-button>-->
-      <!--<button >Add a new module</button>-->
-      <br>
-      <hr>
-      <button type="button" class="btn btn-success" onclick="document.getElementById('txt2').style.display = 'none'; document.getElementById('div_main').style.display = 'inline'; document.getElementById('txt1').style.display = 'inline';">Create Thread</button>
+
     </div>
+    </div>
+    <br>
+    <hr>
+      <button type="button" style="width: 90%" class="btn btn-success" onclick="document.getElementById('txt2').style.display = 'none'; document.getElementById('div_main').style.display = 'inline'; document.getElementById('txt1').style.display = 'inline';">Create Thread</button>
+
+
   </div>
 </div>
 

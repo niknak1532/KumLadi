@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import {MediatorService} from "../mediator.service";
+import {KontrollerService} from "../kontroller.service";
 @Component({
   selector: 'app-reports',
   templateUrl: './reports.component.html',
@@ -6,14 +8,23 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class ReportsComponent implements OnInit {
     @Input() userObject;
+    @Input() sm_moduleName;
     // @Input() rep_dia_display;
     // @Input() display;
-    currentOutFit = "H1U1B1.png";
-    Hair_val = 1;
-    Upper_val = 1;
-    Bottom_val = 1;
+    // currentOutFit = "H1U1B1.png";
+    // Hair_val = 1;
+    // Upper_val = 1;
+    // Bottom_val = 1;
     display: boolean = false;
     panel_heading: string = "Profile";
+    repo_stats = null;
+    dummy_Adaptor = [];
+    userRank = null;
+    gami_stats = [];
+    tbl_format = {"modules":[],"dataNumOfPosts":[],"dataNumOfVotes":[]};
+    private timer;
+    constructor(private _kontrolService: KontrollerService, private _mediatorService: MediatorService) { }
+
     showDialog() {
         this.display = true;
     }
@@ -26,66 +37,150 @@ export class ReportsComponent implements OnInit {
                 document.getElementById("rep_profile").style.display = "block";
                 document.getElementById("rep_gami").style.display = "none";
                 document.getElementById("rep_mile").style.display = "none";
+                document.getElementById("rep_stats").style.display = "none";
+                document.getElementById("rep_subs").style.display = "none";
                 break;
             case 2: this.panel_heading = 'Subscriptions';
+                document.getElementById("rep_subs").style.display = "block";
+                document.getElementById("rep_profile").style.display = "none";
+                document.getElementById("rep_mile").style.display = "none";
+                document.getElementById("rep_stats").style.display = "none";
+                document.getElementById("rep_gami").style.display = "none";
                 break;
             case 3: this.panel_heading = 'Gamification';
                 document.getElementById("rep_gami").style.display = "block";
                 document.getElementById("rep_profile").style.display = "none";
                 document.getElementById("rep_mile").style.display = "none";
+                document.getElementById("rep_stats").style.display = "none";
+                document.getElementById("rep_subs").style.display = "none";
                 break;
             case 4: this.panel_heading = 'MileStones';
                 document.getElementById("rep_mile").style.display = "block";
                 document.getElementById("rep_profile").style.display = "none";
                 document.getElementById("rep_gami").style.display = "none";
+                document.getElementById("rep_stats").style.display = "none";
+                document.getElementById("rep_subs").style.display = "none";
+                break;
+            case 5: this.panel_heading = 'Statistics';
+                document.getElementById("rep_stats").style.display = "block";
+                document.getElementById("rep_profile").style.display = "none";
+                document.getElementById("rep_subs").style.display = "none";
+                document.getElementById("rep_mile").style.display = "none";
+                document.getElementById("rep_gami").style.display = "none";
                 break;
         }
     }
 
-    // changeAttire(x)
-    // {
-    //     switch(x)
-    //     {
-    //         case 'H' :
-    //             ++this.Hair_val;
-    //             if (this.Hair_val > 2)
-    //                 this.Hair_val = 1;
-    //             this.currentOutFit  = "H"+this.Hair_val+"U"+this.Upper_val+"B"+this.Bottom_val+".png";
-    //             break;
-    //         case 'U' :
-    //             ++this.Upper_val;
-    //             if (this.Upper_val > 3)
-    //                 this.Upper_val = 1;
-    //             this.currentOutFit = "H"+this.Hair_val+"U"+this.Upper_val+"B"+this.Bottom_val+".png";
-    //             break;
-    //         case 'B' :
-    //             ++this.Bottom_val;
-    //             if (this.Bottom_val > 2)
-    //                 this.Bottom_val = 1;
-    //             this.currentOutFit = "H"+this.Hair_val+"U"+this.Upper_val+"B"+this.Bottom_val+".png";
-    //             break;
-    //     }
-    // }
-
-  constructor() { }
-
   ngOnInit() {
-      this.data = {
-          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-          datasets: [
-              {
-                  label: 'First Dataset',
-                  data: [65, 59, 80, 81, 56, 55, 40]
-              },
-              {
-                  label: 'Second Dataset',
-                  data: [28, 48, 40, 19, 86, 27, 90]
-              }
-          ]
-      }
+      this.timer = setInterval(() => {
+          this.refresh_MyReports();
+      }, 6000);
   }
 
-    data: any;
+    refresh_MyReports()
+    {
+        if (this.display == true)
+        {
+            this.statsPerModule();
+            this.rep_gami_stats();
+        }
+        if (!sessionStorage.getItem("sessionID"))
+        {
+            this.repo_stats = null;
+            this.display = false;
+        }
+    }
+
+    rep_gami_stats()
+    {
+        this._kontrolService.getUserPoints(sessionStorage.getItem("sessionID"))
+            .then(repo_stats => {this.repo_stats = repo_stats; this.calculateLevel()})
+            .catch(err => console.log(err));
+    }
+    calculateLevel()
+    {
+        let ranking = [{goal: 50, desc: "Const Variable"}, {goal: 100, desc: "Dynamic Variable"}, {goal: 200, desc: "Structure"},{goal: 400, desc: "Class"},{goal: 1000, desc: "Language"}];
+        let max_index = 0;
+        for(let i = 0; i < ranking.length; i++)
+            if (this.repo_stats.points >= ranking[i].goal)
+            {
+                max_index = i;
+            }
+
+        this.userRank = ranking[max_index];
+        this.userRank.goal *= 2;
+        let ratio =  (this.repo_stats.points/this.userRank.goal)*100;
+        (<HTMLInputElement>document.getElementById("div_progressBar")).style.width = ratio.toString()+ "%";
+    }
+
+
+  statsPerModule()
+  {
+      // let min = 0;
+      // while ( min < this.dummy_Adaptor.length)
+      // {
+      //     this.dummy_Adaptor.pop();
+      // }
+      this.dummy_Adaptor = [];
+      if (this.userObject.length > 0)
+      // for (let i = 0; i < this.userObject.modules.length; i++ )
+      {
+          this._kontrolService.attempt(sessionStorage.getItem("sessionID"))
+              .then(dummy_Adaptor => {
+                  this.dummy_Adaptor = dummy_Adaptor;
+                  this.toTableFormat()
+              })
+              .catch(err => console.log(err));
+      }
+
+  }
+//[[{"numPosts":0,"module":"Buzz"},{"numPosts":4,"module":"COS121"}]
+// ,[{"numVotes":0,"module":"Buzz"},{"numVotes":1,"module":"COS121"}]]
+    toTableFormat()
+    {
+        if (this.dummy_Adaptor.length == 0)
+            return ;
+        this.tbl_format.modules = [];
+        this.tbl_format.dataNumOfPosts = [];
+        this.tbl_format.dataNumOfVotes = [];
+        for (let i = 0; i < this.dummy_Adaptor[0].length; i++)
+        {
+            this.tbl_format.modules.push(this.dummy_Adaptor[0][i].module);
+            this.tbl_format.dataNumOfPosts.push(this.dummy_Adaptor[0][i].numPosts);
+            this.tbl_format.dataNumOfVotes.push(this.dummy_Adaptor[1][i].numVotes);
+        }
+        // for (let i = 0; i < this.dummy_Adaptor[0].length; i++) {
+        this.data.datasets[0].data =this.tbl_format.dataNumOfPosts;
+        this.data.datasets[1].data =this.tbl_format.dataNumOfVotes;
+        // }
+    }
+
+    data = {
+        labels: this.tbl_format.modules,
+        datasets: [
+            {
+                label: 'Posts',
+                backgroundColor: '#2FFFF5',
+                data: this.tbl_format.dataNumOfPosts
+            },
+            {
+                label: 'Votes',
+                backgroundColor: '#42A5F5',
+                data: this.tbl_format.dataNumOfVotes
+            }
+        ]
+    }
+
+    options = {
+        title: {
+            display: true,
+            text: 'My Title',
+            fontSize: 16
+        },
+        legend: {
+            position: 'bottom'
+        }
+    };
 
 
 }

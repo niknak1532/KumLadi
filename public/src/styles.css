@@ -52,7 +52,7 @@ div.loader {
     position: absolute;
     border-radius: 0%;
     width: 30%;
-    height: 25%;
+    height: 41%;
     left: 19%;
     top: 55%;
 }
@@ -116,3 +116,4 @@ div.loader {
     background-color: black;
     background: black;
 }
+

@@ -13,6 +13,7 @@ export class NavBarComponent implements OnInit {
     @Input() nav_crums;
     @Output() nb_restToDash = new EventEmitter();
     @Output() logout_emit = new EventEmitter();
+    @Output() shift_timer = new EventEmitter();
     @Output() clicked_crumb = new EventEmitter();
     @Output() view_profile = new EventEmitter();
   constructor() { }
@@ -20,15 +21,6 @@ export class NavBarComponent implements OnInit {
     // items: MenuItem[];
 
     ngOnInit() {
-        // this.items = [];
-        // this.items.push({label:'Categories'});
-        // this.items.push({label:'Sports'});
-        // this.items.push({label:'Football'});
-        // this.items.push({label:'Countries'});
-        // this.items.push({label:'Spain'});
-        // this.items.push({label:'F.C. Barcelona'});
-        // this.items.push({label:'Squad'});
-        // this.items.push({label:'Lionel Messi', url: 'https://en.wikipedia.org/wiki/Lionel_Messi'});
     }
 
     restoreToDash(x: string )
@@ -46,7 +38,7 @@ export class NavBarComponent implements OnInit {
         this.view_profile.emit();
     }
 
-    crum_selected(selected_crum_id: string)
+    crum_selected(selected_crum_id: string, index: number)
     {
         var i =  0;
         for (; i < this.nav_crums.length; i++)
@@ -57,11 +49,17 @@ export class NavBarComponent implements OnInit {
 
         if (i == this.nav_crums.length)
         {
-            console.log("Something went nav-Search");
+            // console.log("Something went nav-Search");
+            // alert("Something went nav-Search");
             return ;
         }
         var newPin = this.nav_crums[i];
         this.nav_crums.splice(i, this.nav_crums.length-i);
-        this.clicked_crumb.emit({postId: newPin.postId, heading: newPin.heading});
+        this.clicked_crumb.emit({postId: newPin.postId, heading: newPin.heading, level: index});
+    }
+
+    timerShift(i: number)
+    {
+        this.shift_timer.emit(i);
     }
 }
