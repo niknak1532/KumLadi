@@ -11,6 +11,12 @@ var username = 'cn=' + ldap_cn + ',ou=Computer Science,o=University of Pretoria,
 var base = 'ou=computer science,o=university of pretoria,c=za';
 
 module.exports={
+/**
+* @params loginDetails The username and password combination as json object
+* @params callback The callback function
+* @todo Get tge modules a user is registered to
+* @return A JSON object witht the modules the user is registered to
+*/
 	getModules : function(loginDetails, callback){
 		var client = ldap.createClient({
 			url: ldap_url, 
@@ -61,6 +67,12 @@ module.exports={
 		});
 	}, 
 
+/**
+* @params userDetails The username and password combination as json object
+* @params callback The callback function
+* @todo Validate user in LDAP
+* @return A JSON object with the users details
+*/
 validateUser : function(userDetails, callback) {
 		var client = ldap.createClient({
 			url: ldap_url, 
