@@ -83,7 +83,7 @@
     <!--<a *nglBreadcrumb >Support</a>-->
   <!--</ngl-breadcrumbs>-->
 <!--</div>-->
-<div class="panel" style=" top: 50px; position: absolute; width: 100%; height: 20px; background-color: black; border-bottom: 1px solid white" id="div_breadCrums">
+<div class="panel" style="display:none; top: 50px; position: absolute; width: 100%; height: 20px; background-color: black; border-bottom: 1px solid white" id="div_breadCrums">
   <div style="float: left">
     <span class="glyphicon glyphicon-home" aria-hidden="true"></span>
     <div style="display: inline" *ngFor="let nc of nav_crums" (click)="crum_selected(nc.postId, nc.level)"><span class="glyphicon glyphicon-menu-right" aria-hidden="true"></span><p>{{nc.heading}}</p></div>

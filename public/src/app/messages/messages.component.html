@@ -1,4 +1,4 @@
-<div class="panel panel-default" id="message">
+<div class="panel panel-default col-sm-6" id="message">
   <div class="panel-heading gold" style=" color: black ; height: 38px">
     <div style="float: right">
       <!--<button onclick="$('#message').animate({top: '-150px', opacity: '0.0'}).hide(1000); " (click)="addToNav('mess')" id="btn_mess_tooltip" class="btn btn-default"><span class="glyphicon glyphicon-resize-small" style="top: 4px; left: 6px; position: absolute;" onclick=""></span>-->
@@ -11,7 +11,8 @@
     <div *ngIf="mess_Post" style="height: 85%; width: 100%; overflow-y: auto">
       <h3 style=""><b>{{mess_Post.heading}}</b></h3><br>
       <p >{{mess_Post.module}} {{mess_Post.content}}</p>
-      <p style="float: right"><i>Posted on {{time_ago(mess_Post.timestamp)}}</i></p>
+      <p style="float: right"><i>Posted by {{mess_Post.studentID}}</i></p>
+      <p style="float: right"><i>On {{mess_Post.timestamp}}</i></p>
       <br><br>
       <div class="chip2">
 

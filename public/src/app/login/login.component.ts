@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
     @Input() responseDialog;
     @Output() authenticate_User = new EventEmitter();
     @Output() refreshedPage = new EventEmitter();
-
+    login_view : boolean = false;
     login_id = "";
     constructor() { }
 
@@ -30,14 +30,13 @@ export class LoginComponent implements OnInit {
         this.login_id = (<HTMLInputElement>document.getElementById("float-input")).value;
         this.user_password = (<HTMLInputElement>document.getElementById("float-input2")).value;
         this.authenticate_User.emit({usrId: this.login_id, usrPs: this.user_password});
+        (<HTMLInputElement>document.getElementById("float-input")).value = "";
+        (<HTMLInputElement>document.getElementById("float-input2")).value = "";
     }
 
-
-
-
-    display: boolean = false;
-
-    showDialog() {
-        this.display = true;
-    }
+    // display: boolean = false;
+    //
+    // showDialog() {
+    //     this.display = true;
+    // }
 }

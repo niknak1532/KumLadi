@@ -9,12 +9,15 @@ import {Post} from "../post";
   styleUrls: ['./comments.component.css']
 })
 export class CommentsComponent implements OnInit {
+    constructor(private _mediatorService: MediatorService) { }
+
     @Input() buzz_comments;
     @Input() user_name;
     @Input() co_Posts;
     @Output() co_selectedItem = new EventEmitter();
     @Output() co_addToNav = new EventEmitter();
-    constructor(private _mediatorService: MediatorService) { }
+
+
     search_string: string = "";
   ngOnInit() {
       // this.getPosts();

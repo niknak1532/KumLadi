@@ -1,24 +1,59 @@
-<form id="log_containment">
-    <img  src="../../assets/kumladi_glow.png" height="100" width="160">
-    <div class="form-group">
-        <div class="ui-float-label" style=" width: 150px; ">
-            <!--<button style="float: left; width: 40px; height: 40px; ">-->
-                <!--<span style=" color: black; "><i class="glyphicon glyphicon-lock"></i>-->
-                <!--</span>-->
-            <!--</button>-->
-            <!--<input id="float-input" type="text" size="40" style="height: 40px" value="{{login_id}}" [(ngModel)]="login_id" pInputText required>-->
-            <input id="float-input" type="text" size="40" style="height: 40px" value="{{login_id}}" pInputText required>
-            <label for="float-input">Username: </label>
+<div class="jumbotron text-center" id="bobo">
+    <div class="containerX">
+        <h1>Welcome to the Buzz Community</h1>
+        <p>A <i>gamification</i> based online educational forum that works and plays hard!</p>
+        <div>
+            <a class="btn btn-primary" (click)="login_view = !login_view" role="button">Login</a>
+            <!--<a class="btn btn-warning btn-lg" role="button">Take a Tour &raquo;</a>-->
         </div>
     </div>
-<br>
-    <div class="form-group">
-        <div class="ui-float-label" style="width: 150px; ">
-            <input id="float-input2" type="password" size="40" style="height: 40px" value="{{user_password}}" pInputText>
-            <label for="float-input2">Password: </label>
+</div>
+
+<div class="container" id="dodo">
+    <!-- Example row of columns -->
+    <div class="row">
+        <div class="col-md-4">
+            <h2>Buzz Bounty&trade;</h2>
+            <p>....... ...... ................ ....................... ..................
+                ......... .. ................ ................ ................
+                ................ ............... ......... .. .. . </p>
+            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
         </div>
+        <div class="col-md-4">
+            <h2>Rewards</h2>
+            <p>An online virtual currency, which enables you to grow and evolve not only on the Buzz platform but your mental ability.
+            </p>
+            <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+        </div>
+        <div class="col-md-4">
+            <form *ngIf="login_view; else alterX" style="align-items: center">
+                <img  src="../../assets/kumladi_glow.png" height="100" width="160">
+                <div class="form-group">
+                    <div class="ui-float-label" style=" width: 150px; ">
+                        <input id="float-input" type="text" size="40" style="height: 36px" pInputText maxlength="9" required>
+                        <label for="float-input">Username: </label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="ui-float-label" style="width: 150px; ">
+                        <input id="float-input2" type="password" size="40" style="height: 36px" maxlength="9" required>
+                        <label for="float-input2">Password: </label>
+                    </div>
+                </div>
+                <button type="submit" (click)="loginAttempt()" class="btn btn-success">Buzz-In</button>
+                <p-growl [(value)]="responseDialog"></p-growl>
+             </form>
+
+            <ng-template #alterX>
+                <h2>Open Community</h2>
+                <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus,
+                    tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa
+                    justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
+                <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
+            </ng-template>
+
+        </div>
+    </div>
     </div>
 
-    <button type="submit" (click)="loginAttempt()" class="btn btn-success">Login</button>
-    <p-growl [(value)]="responseDialog"></p-growl>
-</form>
+    <hr>

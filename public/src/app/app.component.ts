@@ -86,6 +86,7 @@ export class AppComponent {
         this.user_Id = "";
         sessionStorage.removeItem("sessionID");
         console.log('sessionId after log out'+ sessionStorage.getItem("sessionID"));
+        this.sm_moduleName = "";
         this.resetTextFields();
         this.dashBored();
     }
@@ -147,7 +148,7 @@ export class AppComponent {
             return;
         this.getAllPosts(this.sm_moduleName);
         document.getElementById('id_dashboard').style.display = 'inline';
-        document.getElementById('div_breadCrums').style.display = 'inline';
+        // document.getElementById('div_breadCrums').style.display = 'inline';
         document.getElementById('id_login').style.display = 'none';
         this.user_Id = sessionStorage.getItem("sessionID");
     }
@@ -186,8 +187,8 @@ export class AppComponent {
             this.sp_Posts.pop();
         for (let i =0; 0 < this.rp_Posts.length; i++)
             this.rp_Posts.pop();
-        for (let i =0; 0 < this.nav_crums.length; i++)
-            this.nav_crums.pop();
+        // for (let i =0; 0 < this.nav_crums.length; i++)
+        //     this.nav_crums.pop();
 
         this.idForMe = "";
         this.mess_Post = null;
@@ -200,8 +201,8 @@ export class AppComponent {
 
     setSibs(choosenId: string, pHeading: string)
     {
-        this.nav_crums = [];
-        this.nav_crums.push({heading: pHeading,postId: choosenId});
+        // this.nav_crums = [];
+        // this.nav_crums.push({heading: pHeading,postId: choosenId});
         this.x_setSibs(choosenId);
         this.x_setMessage(choosenId);
     }
@@ -217,10 +218,10 @@ export class AppComponent {
 
     setMessage(choosenId: string, heading: string, level: number)
     {
-        for( ; level < this.nav_crums.length; )
-            this.nav_crums.pop();
-        this.nav_crums.splice(level, this.nav_crums.length - level)
-        this.nav_crums.push({heading: heading,postId: choosenId});
+        // for( ; level < this.nav_crums.length; )
+        //     this.nav_crums.pop();
+        // this.nav_crums.splice(level, this.nav_crums.length - level)
+        // this.nav_crums.push({heading: heading,postId: choosenId});
 
         this.x_setMessage(choosenId);
     }
