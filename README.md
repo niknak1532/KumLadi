@@ -6,7 +6,8 @@
 **Group name**: *KumLadi*<br>
 **Project name**: *Buzz*<br>
 **Module code**: *COS 301 (2017)*<br>
-**Project link**: <strong><a href="http://kumladi.herokuapp.com" target="_">KumLadi</a></strong>
+**Project link**: <strong><a href="http://kumladi.herokuapp.com" target="_">KumLadi</a></strong><br>
+**User manual**: <strong><a href="https://github.com/niknak1532/KumLadi/blob/master/User%20Manual/user-manual.pdf" target="_">User manual</a></strong>
 ## Contributors:
 
 #### Nathan Ngobale - <a href= "https://github.com/JON-Nathan" target="_blank">**GitHub**</a>
