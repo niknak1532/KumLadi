@@ -1,0 +1,230 @@
+<!doctype html>
+<html>
+<head>
+  <!--"../node_modules/clarity-ui/clarity-ui.min.css",-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <script src="https://unpkg.com/ng-lightning@2.0.1/bundles/ng-lightning.umd.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+  <!--<link rel="stylesheet" href="../node_modules/clarity-icons/clarity-icons.min.css">-->
+  <!--<script src="../node_modules/@webcomponents/custom-elements/custom-elements.min.js"></script>-->
+  <!--<script src="../node_modules/clarity-icons/clarity-icons.min.js"></script>-->
+  <link async href="http://fonts.googleapis.com/css?family=Aladin" data-generated="http://enjoycss.com" rel="stylesheet" type="text/css"/>
+
+  <!--<script src="assets/particle_scripts/three.js"></script>-->
+  <!--<script src="assets/particle_scripts/Projector.js"></script>-->
+  <!--<script src="assets/particle_scripts/CanvasRenderer.js"></script>-->
+  <!--<script src="assets/particle_scripts/stats.min.js"></script>-->
+  <!--<script src="assets/particle_scripts/tween.min.js"></script>-->
+
+  <script>
+      $(document).ready(function(){
+          $('[data-toggle="popover"]').popover();
+      });
+  </script>
+<script>
+    function doThaThings() {
+        var ctx = document.getElementById("my_canvas");
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["22 August", "27 August", "3 September", "13 September"],
+                datasets: [
+                    {
+                        label: "Likes",
+                        backgroundColor: "#8d9",
+                        data: [133,221,783,478]
+                    }, {
+                        label: "Dislikes",
+                        backgroundColor: "#ffeebb",
+                        data: [408,547,675,734]
+                    },
+                    {
+                        label: "Replies",
+                        backgroundColor: "#aaa",
+                        data: [408,547,675,734]
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        scaleLabel:
+                            {display: true,
+                            labelString: "Amount"},
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+</script>
+  <script>
+      angular.module('myAPP', [])
+
+          .directive('cozzz', function () {
+              return {
+                  restrict: "E",
+                  replace: true,
+                  scope: {
+                      cozzz: '='
+                  },
+                  template: "<ul><member ng-repeat='member in cozzz' member='member'></member></ul>"
+              }
+          })
+
+          .directive('member', function ($compile) {
+              return {
+                  restrict: "E",
+                  replace: true,
+                  scope: {
+                      member: '='
+                  },
+                  template: "<li style='margin-left: +15px'>{{member.name}}</li>",
+                  link: function (scope, element, attrs) {
+                      if (angular.isArray(scope.member.children)) {
+                          element.append("<cozzz cozzz='member.children'></cozzz>");
+                          $compile(element.contents())(scope)
+                      }
+                  }
+              }
+          })
+
+          .controller('IndexCtrl', function ($scope) {
+              $scope.tasks = [
+                  {
+                      name: 'Europe',
+                      children: [
+                          {
+                              name: 'Italy',
+                              children: [
+                                  {
+                                      name: 'Rome'
+                                  },
+                                  {
+                                      name: 'Milan'
+                                  }
+                              ]
+                          },
+                          {
+                              name: 'Spain'
+                          }
+                      ]
+                  },
+                  {
+                      name: 'South America',
+                      children: [
+                          {
+                              name: 'Brasil'
+                          },
+                          {
+                              name: 'Peru'
+                          }
+                      ]
+                  }
+              ];
+          });
+      </script>
+  <script>
+      google.charts.load('current', {'packages':['bar']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+          var data = google.visualization.arrayToDataTable([
+              ['Year', 'Sales', 'Expenses', 'Profit'],
+              ['2014', 1000, 400, 200],
+              ['2015', 1170, 460, 250],
+              ['2016', 660, 1120, 300],
+              ['2017', 1030, 540, 350]
+          ]);
+
+          var options = {
+              chart: {
+                  title: 'Company Performance',
+                  subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+              }
+          };
+
+          var chart = new google.charts.Bar(document.getElementById('columnchart_material'));
+
+          chart.draw(data, google.charts.Bar.convertOptions(options));
+      }
+  </script>
+  <script>
+      function drag_start(event)
+      {
+          var style = window.getComputedStyle(event.target, null);
+          var str = (parseInt(style.getPropertyValue("left")) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top")) - event.clientY)+ ',' + event.target.id;
+          event.dataTransfer.setData("Text",str);
+      }
+
+      function drop(event)
+      {
+          var offset = event.dataTransfer.getData("Text").split(',');
+          var dm = document.getElementById(offset[2]);
+          dm.style.left = (event.clientX + parseInt(offset[0],10)) + 'px';
+          dm.style.top = (event.clientY + parseInt(offset[1],10)) + 'px';
+          event.preventDefault();
+          return false;
+      }
+
+      function drag_over(event)
+      {
+          event.preventDefault();
+          return false;
+      }
+
+  </script>
+  <script>
+      $('.Amodule').click(function (){
+          $(this).children().toggle();
+      });
+
+  </script>
+  <script>
+      var currentOutFit = "H1U1B1";
+      var Hair_val = 1;
+      var Upper_val = 1;
+      var Bottom_val = 1;
+      function changeAttire(x)
+      {
+      }
+  </script>
+  <link rel="stylesheet" href="https://unpkg.com/@salesforce-ux/design-system/assets/styles/salesforce-lightning-design-system.min.css">
+  <meta charset="utf-8">
+  <title>Buzz Community</title>
+  <base href="/">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+</head>
+<body>
+
+  <app-root>
+    <div class="demo-only" style="height: 6rem;">
+      <div role="status" class="slds-spinner slds-spinner_large">
+        <span class="slds-assistive-text">Loading</span>
+        <div class="slds-spinner__dot-a"></div>
+        <div class="slds-spinner__dot-b"></div>
+      </div>
+    </div>
+  </app-root>
+
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>
+<style>
+  body {
+    /*background-image: url("assets/background.png");*/
+  }
+</style>

@@ -1,0 +1,41 @@
+<div class="panel panel-default" id="sibb">
+  <div class="panel-heading gold" style="color: black ; height: 38px">
+    <div style="float: right">
+
+        <!--<button onclick="$('#sibb').animate({top: '-190px', opacity: '0.0'}).hide(1000); $('#div_sp_tools').slideToggle();" (click)="addToNav('sibb')"   id="btn_sp_tooltip" class="btn btn-default" type="button" style=" "><span class="glyphicon glyphicon-resize-small" style="top: 4px; left: 6px; position: absolute;" onclick=""></span>-->
+        <!--</button>-->
+        <!--<button onclick="$('#sp_searchTool').slideToggle(); $('#sp_heading').slideToggle();" id="btn_sp_tooltip2" class="btn btn-default" type="button" style=" "><span class="glyphicon glyphicon-search" style="top: 4px; left: 6px; position: absolute;" onclick=""></span>-->
+        <!--</button>-->
+    </div>
+      <div class="input-group" id="sp_searchTool" style="display: none; position: absolute">
+          <input id="email" type="text" class="form-control" name="email" value="{{search_string}}" [(ngModel)]="search_string" style="height: 15px; width: 200px; margin-bottom: 0px; ">
+          <span class= "glyphicon glyphicon-search" style="" style="float: left"> </span>
+      </div>
+      <h3 id="sp_heading" class="panel-title "><b>Related - Posts</b></h3>
+  </div>
+  <div class="panel-body gradient-pattern " id="x17" style="font-size: 12px; height:76%; overflow-y: auto; color: black">
+      <table class="table table-hover">
+          <thead>
+          <tr>
+              <th>Heading</th>
+              <th>Username</th>
+              <th>Time</th>
+          </tr>
+          </thead>
+          <!--*ngFor="let p of rp_Posts"-->
+          <tr *ngFor="let p of sp_Posts" (click)="selectedSibling(p.postID,p.heading, p.level)">
+              <td>{{p.heading}}</td>
+              <td>{{p.userID}}</td>
+              <td>{{time_ago(p.timestamp)}}</td>
+          </tr>
+          <tr *ngIf="(sp_Posts.length == 0)">
+              <td>No responses to current message</td>
+          </tr>
+      </table>
+  </div>
+</div>
+
+<style>
+
+
+</style>

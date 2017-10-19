@@ -1,0 +1,82 @@
+<div class="panel panel-default" id="side">
+  <div class="panel-heading gold" style=" color: black ">
+    <div class="dropdown" style=" margin-right: 60px; position: absolute; right: 50px; top: 0px">
+      <button id="btn_sm_courses" class="btn btn-default dropdown-toggle" style="float: right;  " type="button" data-toggle="dropdown">{{sm_moduleName}}
+        <span class="caret"></span></button>
+      <ul class="dropdown-menu" *ngIf="userObject.length > 0" style="margin-top: 30px">
+        <li class="dropdown-header">Your Modules</li>
+        <li *ngFor="let p of userObject[0].modules" (click)="sm_seleceted_newModule(p)"><a href="#">{{p}}</a></li>
+      </ul>
+    </div>
+    <h3 class="panel-title"><b>Menu</b></h3>
+  </div>
+
+  <div class="panel-body" style="font-size: 12px; width:200px; height:90%; color: #333">
+    <div style=" height:80%; overflow-y:auto; width: 200px">
+      <div  *ngFor="let p1 of sm_Posts" style="padding-left: +0px"  >
+        <div >
+          <button onclick="$(this).parent().children().toggle(); $(this).show()" type="button" class="btn btn-default" style="height:30px; margin-top: 9px; width: 90%" (click)=" selectedItem(p1.postID,p1.heading)">{{p1.heading}}</button>
+        </div>
+      </div>
+      <div>
+
+      </div>
+    </div>
+    <br>
+    <hr>
+    <button type="button" style="width: 90%" class="btn btn-success" onclick="document.getElementById('txt2').style.display = 'none'; document.getElementById('div_main').style.display = 'inline'; document.getElementById('txt1').style.display = 'inline';" data-toggle="modal" data-target="#myModalHorizontal">Create Thread</button>
+
+
+  </div>
+</div>
+
+<style>
+  .divNaviItem:hover{
+    color: blue;
+    cursor: pointer;
+  }
+
+  #divNavi{
+    /*background-color: #bbb;*/
+    font-size: 14px;
+  }
+
+  .badge {
+    font-size: 8px;
+    background-color: black;
+  }
+
+  .divModule{
+    background-color: #999;
+    color: #EEE;
+    font-size: 20px;
+    padding-left: 10px;
+  }
+
+  .folder{
+    color: sandybrown;
+  }
+
+  .buttondemoBasicUsage section {
+    background: #f7f7f7;
+    border-radius: 3px;
+    text-align: center;
+    margin: 1em;
+    position: relative !important;
+    padding-bottom: 10px; }
+
+  .buttondemoBasicUsage md-content {
+    margin-right: 7px; }
+
+  .buttondemoBasicUsage section .md-button {
+    margin-top: 16px;
+    margin-bottom: 16px; }
+
+  .buttondemoBasicUsage .label {
+    position: absolute;
+    bottom: 5px;
+    left: 7px;
+    font-size: 14px;
+    opacity: 0.54; }
+</style>
+

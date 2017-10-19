@@ -1,0 +1,122 @@
+/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+.hideme{
+    display: none;
+}
+
+div.loader {
+    position: absolute;
+    width: 50%;
+    left: 45%;
+    top: 45%;
+    font-family: "Droid Sans Georgian";
+    font-size: 200%;
+    color: chocolate;
+}
+
+#side
+{
+    position: absolute;
+    border-radius: 0%;
+    width: 18%;
+    height: 87%;
+    left: 1%;
+    top: 13%;
+    font-size: 150%;
+}
+
+.panel-heading{
+    background: black;
+    colour: white;
+}
+
+#subs
+{
+    position: absolute;
+    border-radius: 0%;
+    width: 30%;
+    height: 20%;
+    left: 19%;
+    top: 80%;
+}
+
+#sibb
+{
+    position: absolute;
+    border-radius: 0%;
+    width: 30%;
+    height: 42%;
+    left: 19%;
+    top: 13%;
+}
+
+#recent
+{
+    position: absolute;
+    border-radius: 0%;
+    width: 30%;
+    height: 41%;
+    left: 19%;
+    top: 55%;
+}
+
+#message
+{
+    position: absolute;
+    border-radius: 0%;
+    width: 50%;
+    height: 42%;
+    left: 49%;
+    top: 13%;
+}
+
+#comments
+{
+    position: absolute;
+    border-radius: 0%;
+    width: 50%;
+    height: 45%;
+    left: 49%;
+    top: 55%;
+}
+
+#stat
+{
+    position: absolute;
+    border-radius: 0%;
+    width: 98%;
+    height: 40%;
+    left: 1%;
+    top: 101%;
+}
+
+.chip {
+    display: inline-block;
+    float: right;
+    /*padding: 0 25px;*/
+    height: 50px;
+    font-size: 16px;
+    line-height: 50px;
+    border-radius: 25px;
+    background-color: #BBB;
+    padding-left: 20px;
+}
+
+.chip div {
+    float: right;
+    /*margin: 0 10px 0 -25px;*/
+    padding-left: 30px;
+    height: 65px;
+    width: 65px;
+    border-radius: 100%;
+    background-color: #000;
+    border: 4px solid #BBB;
+    padding-bottom: 30px;
+    padding-left: 0px;
+}
+
+.panel{
+    background-color: black;
+    background: black;
+}
+

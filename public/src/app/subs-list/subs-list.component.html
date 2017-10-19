@@ -1,0 +1,43 @@
+<div class="panel panel-default" id="subs" >
+  <div class="panel-heading" style="background: #333; color: white ">
+    <div style="float: right">
+      <button onclick="$('#div_sl_tools').slideToggle();" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="glyphicon glyphicon-th " style="float: right" onclick=""></span>
+      </button>
+      <div id="div_sl_tools" onclick="$('#div_sl_tools').slideToggle();" class="wall" style="position: fixed; background-color: #BBB; border: 1px solid grey; border-radius: 5px; display: none; width: 60px; height: 60px; ">
+        <div class="tools" onclick="$('#x10').toggle();" style="float: right; height: 30px; width: 30px; border: 1px solid darkgrey; border-radius: 5px; ">
+          <span class="glyphicon glyphicon-pushpin" style="float: right" onclick=""></span>
+        </div>
+        <div  class="tools" style="height: 30px; width: 30px; border: 1px solid darkgrey; border-radius: 5px; ">
+          <span class="glyphicon glyphicon-search" style="font-size: 20px"></span>
+        </div>
+        <div class="tools" onclick="$('#subs').animate({top: '-150px', opacity: '0.0'}).hide(1000); " (click)="addToNav('subs')" style="height: 30px; width: 30px; border: 1px solid darkgrey; border-radius: 5px; ">
+          <span class="	glyphicon glyphicon-resize-small" style="font-size: 20px"></span>
+        </div>
+
+      </div>
+    </div>
+    <h3 class="panel-title" >Subscription List</h3>
+  </div>
+  <div class="panel-body" id="x10">
+    No current subscriptions
+  </div>
+</div>
+
+<style>
+
+  .banana2:hover{
+    background: greenyellow;
+    cursor:pointer;
+  }
+
+  .glyphicon-th:hover{
+    color: lawngreen;
+  }
+
+  .tools:hover{
+    color: white;
+    background-color: black;
+    background: black;
+    cursor:pointer;
+  }
+</style>

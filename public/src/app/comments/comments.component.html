@@ -1,0 +1,89 @@
+<div class="panel panel-default " id="comments" >
+  <div class="panel-heading gold" style="color: black ; height: 38px;">
+      <div style="float: right">
+          <!--<button onclick="$('#comments').animate({top: '-150px', opacity: '0.0'}).hide(1000); " (click)="addToNav('comments')"  id="btn_co_tooltip" class="btn btn-default" type="button" style=" "><span class="glyphicon glyphicon-resize-small" style="top: 4px; left: 6px; position: absolute;" onclick=""></span>-->
+          <!--</button>-->
+          <!--<button onclick="$('#co_searchTool').slideToggle(); $('#co_heading').slideToggle();" id="btn_co_tooltip2" class="btn btn-default" type="button" style=" "><span class="glyphicon glyphicon-search" style="top: 4px; left: 6px; position: absolute;" onclick=""></span>-->
+          <!--</button>-->
+      </div>
+      <div class="input-group" id="co_searchTool" style="display: none; position: absolute">
+
+          <input id="email" type="text" class="form-control" name="email" value="{{search_string}}" [(ngModel)]="search_string" style="height: 20px; width: 200px">
+          <span class= "glyphicon glyphicon-search" style="height: 30px; font-size: 28px" style="float: left"> </span>
+      </div>
+      <h3 id="co_heading" class="panel-title"><b>Responses</b></h3>
+  </div>
+  <div class="panel-body gradient-pattern" id="x14" style="width: 100%; height: 80%; overflow-y: auto;" >
+      <table class="table table-hover">
+          <thead>
+          <tr>
+              <th>Heading</th>
+              <th>Username</th>
+              <th>Time</th>
+          </tr>
+          </thead>
+          <!--*ngFor="let p of rp_Posts"-->
+          <tr *ngFor="let p of co_Posts" (click)="selectedSibling(p.postID, p.heading, p.level)">
+              <td>{{p.heading}}</td>
+              <td>{{p.userID}}</td>
+              <td>{{time_ago(p.timestamp)}}</td>
+          </tr>
+          <tr *ngIf="(co_Posts.length == 0)">
+              <td>No responses to current message</td>
+          </tr>
+      </table>
+    </div>
+</div>
+<style>
+
+    .banana2:hover{
+        background: greenyellow;
+        cursor:pointer;
+    }
+
+    .glyphicon-th:hover{
+        color: lawngreen;
+    }
+
+    .tools:hover{
+        color: white;
+        background-color: black;
+        background: black;
+        cursor:pointer;
+    }
+</style>
+<style>
+    .banana:hover{
+        background: greenyellow;
+        cursor:pointer;
+    }
+    .chip {
+        display: inline-block;
+        float: right;
+        /*padding: 0 25px;*/
+        height: 30px;
+        width: 200px;
+        font-size: 16px;
+        line-height: 50px;
+        border-radius: 25px;
+        background-color: #BBB;
+        padding-left: 20px;
+    }
+
+    .chip div {
+        float: right;
+        /*margin: 0 10px 0 -25px;*/
+        padding-left: 30px;
+        height: 45px;
+        width: 45px;
+        border-radius: 100%;
+        background-color: #000;
+        background-image: url("../../assets/img_avatar1.png");
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        border: 4px solid #BBB;
+        padding-bottom: 30px;
+        padding-left: 0px;
+    }
+</style>
